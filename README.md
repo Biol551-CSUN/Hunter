@@ -1,7 +1,7 @@
 # Hunter
 
 ## Biol 551 Computer Modeling Repository
-_This repository is a way to organize my data and scripts for transparency._   
+>_This repository is a way to organize my data and scripts for transparency._   
 _It will hold the data, scripts, and outputs that I gather, learn, and create each week._  
 _Each week there will be a new folder added consisting of:_
 
