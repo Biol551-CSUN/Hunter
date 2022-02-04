@@ -2,13 +2,14 @@
 
 ## Biol 551 Computer Modeling Repository
 This repository is a way to organize my data and scripts for transparency.   
-It will hold the data, scripts, and outputs that I gather, learn, and create each week.
+It will hold the data, scripts, and outputs that I gather, learn, and create each week.  
+Each week there will be a new folder added consisting of:
 
-> ### Data
-  >>This folder will hold data needed
+ * ### Data
+   _These folders will hold the data needed to execute the scripts_
 
-> ### Scripts
->>This folder will hold scripts created in the Spring 2022 semester
+* ### Scripts
+  _These folders will hold the scripts created during the Spring 2022 semester_
 
->### Output 
->>I'm not sure what this folder will hold yet
+* ### Output 
+  _I'm not sure what these folders will hold yet_
