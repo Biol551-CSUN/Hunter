@@ -5,11 +5,116 @@
 _It will hold the data, scripts, and outputs that I gather, learn, and create each week._  
 _Each week there will be a new folder added consisting of:_
 
- * ### Data  
-   _These folders will hold the data needed to execute the scripts_
+  ### [Week 2]()  
+   _This week focuses on setting up structure and learning how to script_  
+  > [Data]()  
+   [Scripts]()  
+   [Output]()  
+   
+   
+  ### [Week 3]()  
+   _This week focuses on the ggplot_  
+  > [Data]()  
+   [Scripts]()  
+   [Output]()  
 
-* ### Scripts
-  _These folders will hold the scripts created during the Spring 2022 semester_
 
-* ### Output 
-  _I'm not sure what these folders will hold yet_
+
+  ### [Week 4]()  
+  _This week focuses on....._  
+ >  [Data]()  
+   [Scripts]()  
+   [Output]()  
+   
+
+
+  ### [Week 5]()  
+  _This week focuses on....._  
+ >  [Data]()  
+   [Scripts]()  
+   [Output]()  
+   
+
+
+  ### [Week 6]()  
+  _This week focuses on....._  
+ >  [Data]()  
+   [Scripts]()  
+   [Output]()  
+   
+
+  ### [Week 7]()  
+  _This week focuses on....._  
+ >  [Data]()  
+   [Scripts]()  
+   [Output]()  
+   
+
+
+  ### [Week 8]()  
+  _This week focuses on....._  
+ >  [Data]()  
+   [Scripts]()  
+   [Output]()  
+   
+
+  ### [Week 9]()  
+  _This week focuses on....._  
+ >  [Data]()  
+   [Scripts]()  
+   [Output]()  
+   
+
+
+  ### [Week 10]()  
+   _This week focuses on....._  
+  > [Data]()  
+   [Scripts]()  
+   [Output]()  
+   
+   
+  ### [Group Project]()  
+   _This week focuses on....._  
+ >  [Data]()  
+   [Scripts]()  
+   [Output]()  
+   
+
+
+  ### [Week 12]()  
+   _This week focuses on....._  
+ >  [Data]()  
+   [Scripts]()  
+   [Output]()  
+   
+
+
+  ### [Week 13]()  
+   _This week focuses on....._  
+ >  [Data]()  
+   [Scripts]()  
+   [Output]()  
+   
+
+
+  ### [Week 14]()  
+   _This week focuses on....._  
+ >  [Data]()  
+   [Scripts]()  
+   [Output]()  
+   
+
+
+  ### [Final Project]()  
+   _This is my Final Project for the Spring 2022 semester_  
+ >  [Data]()  
+   [Scripts]()  
+   [Output]()  
+   
+
+
+
+
+
+
+
