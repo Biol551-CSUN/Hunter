@@ -14,7 +14,7 @@ _Each week there will be a new folder added consisting of:_
    
   ### [Week 3]()  
    _This week focuses on the ggplot_  
-  #[Data]()  
+  
    > [Scripts](https://github.com/Biol551-CSUN/Hunter/tree/main/week_3/scripts)  
    [Output](https://github.com/Biol551-CSUN/Hunter/tree/main/week_3/output)  
 
