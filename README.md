@@ -7,16 +7,16 @@ _Each week there will be a new folder added consisting of:_
 
   ### [Week 2]()  
    _This week focuses on setting up structure and learning how to script_  
-  > [Data]()  
-   [Scripts]()  
-   [Output]()  
+  > [Data](https://github.com/Biol551-CSUN/Hunter/tree/main/week_2/data)  
+   [Scripts](https://github.com/Biol551-CSUN/Hunter/tree/main/week_2/scripts)  
+  # [Output]()  
    
    
   ### [Week 3]()  
    _This week focuses on the ggplot_  
-  > [Data]()  
-   [Scripts]()  
-   [Output]()  
+  #[Data]()  
+   > [Scripts](https://github.com/Biol551-CSUN/Hunter/tree/main/week_3/scripts)  
+   [Output](https://github.com/Biol551-CSUN/Hunter/tree/main/week_3/output)  
 
 
 
