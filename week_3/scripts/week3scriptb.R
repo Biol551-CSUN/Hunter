@@ -2,27 +2,32 @@
 ## week 3b script##
 ### if not installed install package
 ### install.packages("palmerpenguins")  ###
-### This session we are learning how to plot
+### This session we are learning how to plot using ggplot
 
 ## Author Jessica
+
+## Created date Feb 10, 2022
+##last updtated Feb 15, 2022
 ########################################
 
+
+#### "libraries"
 library(tidyverse)
 library(palmerpenguins)
 library(beyonce)
 library(here)
-#devtools::install_github("dill/beyonce")
+#devtools::install_github("dill/beyonce") if not already installed
 
-plot1<-ggplot(data=penguins, mapping = aes(x = bill_depth_mm,
+plot1<-ggplot(data=penguins, mapping = aes(x = bill_depth_mm, ### names plot
                                     y = bill_length_mm,
                                     group = species,
                                     color = species))+
-  geom_point()+
+  geom_point()+  ##creates point graph
   geom_smooth(method = "lm") +
   labs(x = "Bill Depth (mm)",
        y = "Bill Length (mm)"
        ) +
-  #scale_color_viridis_d()+
+  #scale_color_viridis_d()+ ## color blind safe colors
 scale_color_manual(values = beyonce_palette(10))+
 ## scale has 3 parts color, shape
 ##scale_color_continuous()
@@ -34,7 +39,7 @@ scale_x_continuous(breaks = c(14,17,21), #limits sets the limits
                                   color = "red"),
                                   panel.background = element_rect(fill = "purple"),
                                   legend.background = element_rect(fill = "orange"))
-  #make sure you put c in front means contatinous
+##make sure you put c in front means contatinous
 ##breaks puts the breaks in the axis
 
 #scale_color_manual(values = c("orange", "purple", "cyan"))
@@ -50,5 +55,5 @@ scale_x_continuous(breaks = c(14,17,21), #limits sets the limits
 
 ggsave(here("week_3","output","penguin.png"),
        width = 7, height = 5) # in inches
-### use gg genes to create genes
+
 
