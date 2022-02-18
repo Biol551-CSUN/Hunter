@@ -56,4 +56,4 @@ scale_x_continuous(breaks = c(14,17,21), #limits sets the limits
 ggsave(here("week_3","output","penguin.png"),
        width = 7, height = 5) # in inches
 
-
+#ggplot(penguins, aes(x = body_mass_g, y = flipper_length_mm, color = "red"))+geom_point() 

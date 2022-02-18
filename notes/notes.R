@@ -60,4 +60,12 @@ dadjoke()
 
 #library(nycflights13)
 
+#  if associated with data has to go in astethics if not then can go out, 
+#
 
+#### read in data ####
+## read_csv and read reads the file
+# WeightData<-read_csv(here("week_2", "data", "weightdata.csv"))
+
+
+# write_csv()
