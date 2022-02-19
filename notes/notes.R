@@ -1,5 +1,7 @@
 ### this is my notes section for myself
 
+### here package 
+
 
 ################## Transparent Script #######
 ## 1. Intro - name date last edir
@@ -17,10 +19,15 @@
 
 
 ###### Daily ######
-#git pull
-#git add testscript.r
-##git commit -a -m "I am adding testscrip.R"
-#git push
+#git pull - downloads repository 
+#git add testscript.r - i want to add new files to repo, stages
+## git add week_3/ will add the whole folder
+##git commit -a -m "I am adding testscrip.R" - saves changes
+###### -a means commits to every change; all
+###### -m means I am adding a message
+#git push - downloads to internet
+## commit often because reverting will go back to last commit
+# to revert to last commit go to blue wheel
 
 
 ##### ggplot ######
@@ -68,4 +75,5 @@ dadjoke()
 # WeightData<-read_csv(here("week_2", "data", "weightdata.csv"))
 
 
-# write_csv()
+# write_csv() to create files
+
