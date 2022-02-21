@@ -1,12 +1,22 @@
 ### this is my notes section for myself
 
-### here package 
+### here package allows us to nagigate our projects easily and share
+# Unbreakable file path is transferable for someone elses computer because 
+#when they download it will be saved in a different
+# here::here("folder name", "name of file") - to the left is function name and 
+# right is package name
+# use here( "outer folder name", "inner folder name", "name of file") if it is both
 
+
+#tidyverse is for data manipulation and visualization - contains ggplot
 
 ################## Transparent Script #######
-## 1. Intro - name date last edir
+## 1. Intro - name date last edit purpose
 
 ## 2. Libraries
+ # add all libraries
+# library(tidyverse)
+# library(here)
 
 ## 3. function
 
@@ -15,6 +25,27 @@
 ## 5. Analysis
 
 ## comment comment comment
+
+
+#intro-------------
+# purpose
+# Author 
+# date created 
+
+# libraries ------------
+#library(tidyverse)
+
+# load data ------
+# Filename<-readcsv(........)
+# complete.cases(.) to remove na's
+
+# functions ----------
+# function to create a prediction map
+
+# analysis -------
+# calculate blahhh
+
+
 
 
 
@@ -71,9 +102,23 @@ dadjoke()
 #
 
 #### read in data ####
-## read_csv and read reads the file
+## read_csv and read reads the file - use underscore instead of .
+#because brings in all characters as characters
 # WeightData<-read_csv(here("week_2", "data", "weightdata.csv"))
 
 
 # write_csv() to create files
 
+
+# Create folders in terminal
+# $ cd week_4 ### to go to that directory cd means current directory
+# to creATE A folder 
+# $ mkdir foldername - to make new folder
+# cd ../ -  to go back up one folder  
+# install.packages("packagename")  - to install packages 
+
+
+### how to look at data
+# head(data) - look at top 6
+# tail(dtata) - looks at bottom 6 lines
+# view(data)
