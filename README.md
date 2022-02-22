@@ -21,15 +21,15 @@ _Each week there will be a new folder added consisting of:_
 
 
   ### [Week 4]()  
-  _This week focuses on....._  
- >  [Data]()  
-   [Scripts]()  
-   [Output]()  
+  _This week focuses on manipulating data using tidyr_  
+ >  [Data](https://github.com/Biol551-CSUN/Hunter/tree/main/week_4/Data4)  
+   [Scripts](https://github.com/Biol551-CSUN/Hunter/tree/main/week_4/output4)  
+   [Output](https://github.com/Biol551-CSUN/Hunter/tree/main/week_4/scripts4)  
    
 
 
   ### [Week 5]()  
-  _This week focuses on....._  
+  _This week focuses on practicing data with d_  
  >  [Data]()  
    [Scripts]()  
    [Output]()  

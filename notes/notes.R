@@ -122,3 +122,21 @@ dadjoke()
 # head(data) - look at top 6
 # tail(dtata) - looks at bottom 6 lines
 # view(data)
+
+
+#animals that talk to you
+#install.packages("cowsay")
+library(cowsay)
+# I want a shark to say hello
+say("hello", by = "shark")
+say("I want pets", by = "cat")
+say("hello", by = "pig")
+#say("hi", by = "dog") # no dog
+say(by ="random")
+#“cow”, “chicken”, “chuck”, “clippy”, “poop”, “bigcat”, “ant”, “pumpkin”, 
+#“ghost”, “spider”, “rabbit”, “pig”, “snowman”, “frog”, “hypnotoad”, “shortcat”,
+#“longcat”, “fish”, “signbunny”, “facecat”, “behindcat”, “stretchycat”, 
+#“anxiouscat”, “longtailcat”, “cat”, “trilobite”, “shark”, “buffalo”, 
+#“grumpycat”, “smallcat”, “yoda”, “mushroom”, “endlesshorse”, “bat”, “bat2”, 
+#“turkey”, “monkey”, “daemon”, “egret”, “duckling”, “duck”, “owl”, “squirrel”, 
+#“squirrel2”, “rms”, “random”
