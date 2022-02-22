@@ -5,14 +5,14 @@
 _It will hold the data, scripts, and outputs that I gather, learn, and create each week._  
 _Each week there will be a new folder added consisting of:_
 
-  ### [Week 2]()  
+  ### [Week 2](https://github.com/Biol551-CSUN/Hunter/tree/main/week_2)  
    _This week focuses on setting up structure and learning how to script_  
   > [Data](https://github.com/Biol551-CSUN/Hunter/tree/main/week_2/data)  
    [Scripts](https://github.com/Biol551-CSUN/Hunter/tree/main/week_2/scripts)  
   # [Output]()  
    
    
-  ### [Week 3]()  
+  ### [Week 3](https://github.com/Biol551-CSUN/Hunter/tree/main/week_3)  
    _This week focuses on the ggplot_  
   
    > [Scripts](https://github.com/Biol551-CSUN/Hunter/tree/main/week_3/scripts)  
@@ -20,7 +20,7 @@ _Each week there will be a new folder added consisting of:_
 
 
 
-  ### [Week 4]()  
+  ### [Week 4](https://github.com/Biol551-CSUN/Hunter/tree/main/week_4)  
   _This week focuses on manipulating data using tidyr_  
  >  [Data](https://github.com/Biol551-CSUN/Hunter/tree/main/week_4/Data4)  
    [Scripts](https://github.com/Biol551-CSUN/Hunter/tree/main/week_4/output4)  
@@ -28,10 +28,10 @@ _Each week there will be a new folder added consisting of:_
    
 
 
-  ### [Week 5]()  
-  _This week focuses on practicing data with d_  
- >  [Data]()  
-   [Scripts]()  
+  ### [Week 5](https://github.com/Biol551-CSUN/Hunter/tree/main/week_5)  
+  _This week focuses on practicing data with dplyr_  
+ >  [Data](https://github.com/Biol551-CSUN/Hunter/tree/main/week_5/data5)  
+   [Scripts](https://github.com/Biol551-CSUN/Hunter/tree/main/week_5/scripts5)  
    [Output]()  
    
 
