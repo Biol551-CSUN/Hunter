@@ -41,22 +41,22 @@ penguins %>%
 # Save the plot in the correct output folder.
 
 penguins %>% 
-  drop_na(sex) %>% 
-  filter(sex != "male") %>% 
-  mutate(logbodymass = log(body_mass_g)) %>% 
-  select(species, island, sex, logbodymass) %>% 
-  ggplot(mapping = aes(x = species,
+  drop_na(sex) %>% # to remove the na's from data
+  filter(sex != "male") %>% # this filters out only the males
+  mutate(logbodymass = log(body_mass_g)) %>%  # to create new columns of data
+  select(species, island, sex, logbodymass) %>% ## this onlt selects for the items listed
+  ggplot(mapping = aes(x = species, # this maps the data to x and y axis
                        y = logbodymass,
-                       color = island, 
-                       shape = island))+
-    geom_jitter(width = .34, # ctreates a jitter plot
-                size = 2)+
+                       color = island, # this gives the islands color
+                       shape = island))+ # this gives silands shape also
+    geom_jitter(width = .34, # creates a jitter plot
+                size = 2)+ # this determines the size of points
   labs(x= "Species", ### labels the items in the graph
-       y = "Logorithimic Body Mass",
-       color = "Island",
-       shape = "Island",
-       title = "The Log Body Mass of Penguins by Species",
-       caption = "Source: Palmerspenguins package")+ # caption source
+       y = "Logorithimic Body Mass", # labels y
+       color = "Island", # labels legend
+       shape = "Island", # labels legend
+       title = "The Log Body Mass of Penguins by Species", # cretaed title to plot
+       caption = "Source: Palmerspenguins package")+ # add a caption ;source
   theme(plot.title = element_text(size = 20), # changes the size of the title
         panel.background = element_rect(fill="linen"), # changes the bachground on the plot
         axis.title = element_text(size = 15))+ # change the size of the axis titles
@@ -65,10 +65,5 @@ ggsave(here("week_4", "output4", "Tuesday_lab_homework.png"), ## saving to my fo
        width = 7,
        height = 5) # in inches
 
-    #labs()
-    
   
-
-
-ggsave("")
 
