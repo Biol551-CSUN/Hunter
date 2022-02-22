@@ -52,7 +52,7 @@ chemdatalong %>%
 
 #################### Function 2 ------------
 ### this function creates a violin plot of the water composition values based on high and low tide
-
+### this function also creates a png file of the plot in the output4 folder
 
 
 chemdatalong %>% 
