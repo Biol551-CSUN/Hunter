@@ -140,3 +140,11 @@ say(by ="random")
 #“grumpycat”, “smallcat”, “yoda”, “mushroom”, “endlesshorse”, “bat”, “bat2”, 
 #“turkey”, “monkey”, “daemon”, “egret”, “duckling”, “duck”, “owl”, “squirrel”, 
 #“squirrel2”, “rms”, “random”
+
+
+
+# catterplot uses catss in your graphs
+
+
+
+

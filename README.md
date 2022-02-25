@@ -9,7 +9,7 @@ _Each week there will be a new folder added consisting of:_
    _This week focuses on setting up structure and learning how to script_  
   > [Data](https://github.com/Biol551-CSUN/Hunter/tree/main/week_2/data)  
    [Scripts](https://github.com/Biol551-CSUN/Hunter/tree/main/week_2/scripts)  
-  # [Output]()  
+ 
    
    
   ### [Week 3](https://github.com/Biol551-CSUN/Hunter/tree/main/week_3)  
