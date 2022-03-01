@@ -144,7 +144,8 @@ say(by ="random")
 
 
 # catterplot uses catss in your graphs
-
-
+#install.packages("beepr")
+library(beepr)
+beep(5)
 
 

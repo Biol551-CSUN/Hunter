@@ -1,0 +1,53 @@
+---
+title: "Practice2rmarkdown"
+author: "Jessica Hunter"
+date: "3/1/2022"
+output:
+  html_document:
+    toc: TRUE
+    toc_float: TRUE
+    theme: darkly
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Intro
+
+Today we are going to work with penguin data to learn **RMarkdown**
+
+# Load libraries
+```{r, message=FALSE, warning=FALSE}
+# format changes go inside the curly brackets 
+# spaces matter
+# problems in yaml are usually with spacing
+# google rmd formats to see lots of different formats
+```
+
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(here)
+library(palmerpenguins)
+```
+
+# Inspect the data
+
+
+```{r}
+glimpse(penguins)
+```
+# Make a plot
+```{r, warning=FALSE, message=FALSE}
+penguins %>% 
+  ggplot(aes(x = bill_length_mm,
+             y = bill_depth_mm,
+             color = species))+
+  geom_point()+
+  geom_smooth(method = "lm")+
+  labs(x="Bill Length (mm)",
+       y = "Bill Depth (mm)")+
+  theme_dark()
+```
+

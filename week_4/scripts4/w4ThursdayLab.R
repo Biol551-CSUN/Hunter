@@ -59,7 +59,7 @@ chemdatalong %>%
   ggplot(aes(x= variables,
              y = values, 
              fill=tide))+
-  geom_violin()+ # vilin plot
+  geom_violin()+ # violin plot
   facet_wrap(~variables, # wraps by columns
              scales = "free")+ # releases the scales to be different for each mini plot
 

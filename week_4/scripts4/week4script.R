@@ -37,9 +37,9 @@ filter(.data = penguins,
 filter(.data = penguins,
        sex == "female" & body_mass_g > 5000)
 filter(.data = penguins,
-       year == "2008" | year == "2009")
+       year == "2008" | year == "2009") # or
 filter(.data = penguins,
-       island != "Dream")
+       island != "Dream") # not drean
 filter(.data = penguins,
        species %in% c("Adelie","Gentoo"))
 
