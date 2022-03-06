@@ -148,4 +148,11 @@ say(by ="random")
 library(beepr)
 beep(5)
 
+# devtools::install_github("sctyner/memer")
+library(memer)
 
+meme_list()
+meme_get("FryNotSure")
+meme_get("NoneOfMyBusiness") %>% 
+  meme_text_top("I don't always like coding", size = 28) %>% 
+  meme_text_bottom("But when I do\nIt's always today's totally awesome R package", size = 18)

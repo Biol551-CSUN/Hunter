@@ -1,0 +1,11 @@
+---
+author: Jessica Hunter
+date: '`r format(Sys.Date())`'
+title: class_notes
+output: html_document
+thanks: Dr. Syllbinger
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```

@@ -1,22 +1,32 @@
 ---
 title: "Rmarkdown Notes"
-output: html_notebook
-toc: TRUE
-toc_float: TRUE
-theme: darkly
+output: 
+  html_notebook
+    toc: TRUE
+    toc_float: TRUE
+    theme: darkly
 ---
 
 This is the notes for class week6a
+include=false - dont want to show code ot results
+echo = false - shows results but not code
+message
+warning
+fig.cap = "jflj;dj"
+
+
+
 
 #YAML -yet another markdown language
 if not installed yet install:
 tinytex and
 rmarkdown
 
-
-
-
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+global - this section sets for all moving forward
+```{r setup, include = FALSE}
+knit::opts_chunks$set(warning = FALSE,
+                      echo = TRUE)
+```
 
 Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
 

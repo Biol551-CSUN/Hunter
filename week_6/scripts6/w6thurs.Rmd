@@ -1,0 +1,80 @@
+---
+title: "w6thurs"
+author: "Jessica Hunter"
+date: "3/3/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.path = "../output6/", warning = FALSE)
+## two dots means go up a level and then go to output
+```
+
+
+```{r, echo=TRUE}
+# install.packages("kableExtra")
+# install.packages("ymlthis")
+library(tidyverse)
+library(palmerpenguins)
+library(kableExtra)
+```
+
+```{r penguin1, out.width = "50%"}
+ggplot(penguins,
+       aes(x=bill_length_mm,
+           y = bill_depth_mm))+
+  geom_tile()
+```
+
+out for output and fig for figure  
+
+out.width="70%" (makes it 70% of the width) -->  
+fig.width=3 (makes the width 3 inches) -->  
+fig.height=4 (makes the width 4 inches) -->  
+fig.asp=1.2 (changes the aspect ratio to 1.2) -->  
+fig.align="center" -->  
+fig.path in the the top so apply to whole doc but cant use here
+r label,  
+fig path cant use here function :(  
+have to change label names for each one or it will keep saving over  
+echo hides code
+{r label, option1=value}
+
+```{r penguin2, fig.align='center',fig.width=3, fig.height=4, fig.asp=1.2, fig.cap="this is a plot for penguins"}
+ggplot(penguins,
+       aes(x=bill_length_mm,
+           y = bill_depth_mm))+
+  geom_point()
+```
+
+
+handwrite table
+can make tables interactive
+twitter competition for r tables
+google different tables  
+[link to how to create tables](https://rfortherestofus.com/2019/11/how-to-make-beautiful-tables-in-r/)  
+[link for themes of outputs](https://www.datadreaming.org/post/r-markdown-theme-gallery/)
+
+you can save to output github_document to view easier in github
+pdf doc takes 5 minutes to make file
+look in YAMLthis is addins tab >
+
+
+
+```{r}
+penguins %>%
+  group_by(species) %>%
+  summarise(billmean = mean(bill_length_mm, na.rm = TRUE)) %>%
+  kbl() %>%  # make it a kable table
+    kable_classic()%>%
+  row_spec(2, bold = T, color = "white", background = "red") %>% 
+    kable_styling(full_width = FALSE) #to not make it super wide of the whole width
+
+
+```
+
+```{r}
+library(memer)
+
+```
+
