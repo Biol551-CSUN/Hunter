@@ -51,3 +51,20 @@ penguins %>%
   theme_dark()
 ```
 
+## notes
+
+
+This is the notes for class week6a
+include=false - dont want to show code ot results
+echo = false - shows results but not code
+message
+warning
+fig.cap = "jflj;dj"
+
+
+
+
+#YAML -yet another markdown language
+if not installed yet install:
+tinytex and
+rmarkdown
