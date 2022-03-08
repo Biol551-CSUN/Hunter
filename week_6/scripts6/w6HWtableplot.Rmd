@@ -1,0 +1,88 @@
+---
+title: "Chemical Compositions"
+subtitle: Homework from Thursday lab week 6 on tables and plots
+date: March 3 2022
+author: Jessica Hunter
+output: 
+  html_document:
+    toc: TRUE
+---
+
+
+
+## Libraries
+#### This is a list of the libraries used.
+```{r, echo=TRUE,  results='hide', message=FALSE}
+library(here)
+library(tidyverse)
+library(lubridate)
+library(kableExtra)
+```
+
+## Data
+#### _This section lists the data that is loaded._
+1. CondData.csv  
+2. DepthData.csv
+
+## Functions
+#### _This section is a list of the functions used._
+* The first function rounds the conductivity data to the nearest 10 seconds so I can merge with the depth data later  
+* The next function converts the date and time to date and time this function joins the two data together where there are no NA's and only exact matches. It also rounds the time to 30 minute and takes the mean of the date, temp, depth, and salinity.
+
+
+```{r, message=FALSE, warning=FALSE, echo=TRUE}
+condata <- read_csv(here("week_6","data6", "CondData.csv")) %>% # read in the data
+  mutate(dateandtime = mdy_hms(depth), # convert to datetime format
+         dateandtime = round_date(dateandtime, "10 seconds")) %>% # rounds to the nearest 10 seconds
+  drop_na() %>%  # dropping missing data rows to remove na's
+  select(!depth)  # this removes the depth column
+```
+## Data Visualization  
+#### This section plots a continuous **time** series of **salinity** readings on **January 15, 2022**
+
+```{r, message=FALSE, warning=FALSE, echo=TRUE}
+depdata <- read_csv(here("week_6", "data6", "DepthData.csv")) %>% # reds in data
+  mutate(dateandtime = ymd_hms(date)) # converts to time format
+
+inner_join(depdata,condata) %>% # joins the two and omits the ones that don't match
+  select(!date) %>% # this removes the original date column
+  mutate(timebyminute = round_date(dateandtime, "30 minutes")) %>% # this rounds by the half hour
+  group_by(timebyminute) %>% # grouping variable is time
+  summarise_at(vars(c("dateandtime","TempInSitu","Depth","SalinityInSitu_1pCal")), 
+               list(mean = mean)) %>% # takes mean of each column listed
+  mutate(Time = format(timebyminute, format = "%H:%M")) %>% # this changes to hour and minute
+  select(Time, "Salinity" = SalinityInSitu_1pCal_mean)  %>% # only selects time and salinity columns
+   kbl(caption = "Salinity by the half-hour") %>% # makes a table
+   kable_classic("striped") %>% # theme
+   row_spec(c(0), bold = TRUE, color = "white", background = "black") %>% # changes top row to black
+     kable_styling(full_width = FALSE) #to not make whole width of page
+```
+
+
+
+```{r, message=FALSE, warning=FALSE, echo=TRUE}
+# this function plots the salinity by minute
+depdata %>% # reads in data
+  inner_join(condata) %>% # joins two files and removes non matching
+  rename("Salinity" = SalinityInSitu_1pCal)%>% # renames columns
+  filter(Salinity>30)%>% # removes outlier
+ # mutate(Time = hm(Time)) %>% 
+# view(dep_con_data)
+  ggplot(mapping = aes(x= date, # this maps the x and y
+                       y =Salinity)) +
+  geom_point(alpha = .1, color = "purple", # adds data point
+             size = 2)+
+  geom_smooth(color = "orange", 
+              size = 2) + # adds line through data points
+    labs(title = "Salinity over Time", # adds labels
+       subtitle = "Time average by minute for date January 15, 2022",
+       x = "Time (min)",
+       y = "Salinity (ppm)") +
+  theme(plot.title = element_text(size = 20), # apply title
+        axis.title = element_text(size = 15), # axis title
+        panel.background = element_rect(fill = "grey"), # colors background
+        plot.background = element_rect(color = "grey")) +
+  scale_x_datetime(date_breaks = "1 hour", date_labels = "%H") # adds manual tick marks
+```
+
+
