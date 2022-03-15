@@ -1,0 +1,178 @@
+---
+title: "week 7: Maps"
+author: "Jessica Hunter"
+date: "3/8/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## notes
+
+[link to hack to use link and see like html](raw.githack.com)
+ggmaps uses google maps
+
+**sf** (This is for the serious GIS people. If you want to do actual spatial analyses this is the package to use)
+**ggmap** (Uses the google maps API to make maps. Really easy to use, but requires a credit card for the API...)
+**tmap** (static and interactive maps)
+**leaflet** (interactive html maps)
+
+map_data("location") is the function used to pull out whatever base layer that you want.
+
+
+
+long is longitude. Things to the west of the prime meridian are negative.
+
+lat is latitude.
+
+order. This just shows in which order ggplot should “connect the dots”
+
+region and subregion tell what region or subregion a set of points surrounds.
+
+group. This is very important! ggplot2’s functions can take a group argument which controls (amongst other things) whether adjacent points should be connected by lines. If they are in the same group, then they get connected, but if they are in different groups then they don’t. Essentially, having to points in different groups means that ggplot “lifts the pen” when going between them.  
+## [different projections link](https://rdrr.io/cran/mapproj/man/mapproject.html) 
+
+
+
+
+```{r}
+# install.packages(c("maps", "mapproj"))
+# install.packages("mapdata")
+```
+## Load libraries
+
+```{r}
+library(maps)
+library(mapproj)
+library(tidyverse)
+library(here)
+library(mapdata)
+```
+## Read in Data
+
+```{r}
+popdata<-read_csv(here("week_7","data7","CApopdata.csv"))
+head(popdata)
+stars<-read_csv(here("week_7","data7","stars.csv"))
+head(stars)
+```
+
+
+## Functions
+
+world map - not perfect but can email creator is something is missiong
+
+```{r}
+# get data for the entire world
+world<-map_data("world")
+head(world)
+```
+for usa map outline, lat and longs for outline
+```{r}
+# get data for the USA
+usa<-map_data("usa")
+head(usa)
+```
+ country italy
+```{r}
+# get data for italy
+italy<-map_data("italy")
+head(italy)
+```
+ States
+```{r}
+# get data for states
+states<-map_data("state")
+head(states)
+tail(states)
+```
+ #### group column tells you whne the pen is lifted when you are drawing
+ #### **remember to put group = group**
+
+### Mercator map
+
+```{r}
+ggplot()+
+  geom_polygon(data = world, aes(x = long, y = lat, group = group,
+                                 fill = region),
+               color = "yellow") +
+  guides(fill = FALSE) +
+  theme_minimal() +
+  theme(panel.background = element_rect(fill = "lightblue")) +
+    coord_map(projection = "mercator", # mercator typical projection
+            xlim = c(-180,180)) # add the limits to widen the map
+
+```
+ 
+ if you forget group = group looks like this
+```{r}
+ggplot()+
+  geom_polygon(data = world, aes(x = long, y = lat))
+
+```
+ 
+ ### Sinasoidal map
+ 
+```{r}
+
+
+ggplot()+
+  geom_polygon(data = world, 
+               aes(x = long,
+                   y = lat,
+                   group = group, 
+                   fill = region),
+               color = "black")+
+  theme_minimal()+
+  guides(fill = FALSE)+
+  theme(panel.background = element_rect(fill = "lightblue"))+
+  coord_map(projection = "sinusoidal",
+            xlim = c(-180,180))
+
+
+```
+ ### Map of California
+ 
+```{r}
+
+states %>% 
+  filter(region == "california") %>% 
+  ggplot()+
+  geom_polygon(aes(x = long,
+               y = lat,
+               group = group,
+               fill = region))+
+  coord_map()+
+  theme_void() # deletes the background
+calimap
+head(counties)[1:3,] 
+```
+ 
+ 
+ ## maps including county data
+ 
+```{r}
+# get county data
+counties <-map_data("county")
+
+CApop_county <- popdata %>% 
+  select("subregion" = County, Population) %>% 
+  inner_join(counties) %>% 
+  filter(region == "california") 
+
+  ggplot()+
+  geom_polygon(data = CApop_county,
+               aes(x = long,
+                   y = lat,
+                   fill = Population, 
+                   group = group))+
+  coord_map()+
+    scale_fill_gradient(trans = "log10")+ # log 10 transforming the fill gradient
+  theme_void()
+CApop_county
+```
+ 
+ 
+ 

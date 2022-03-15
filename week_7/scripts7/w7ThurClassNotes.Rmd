@@ -1,0 +1,78 @@
+---
+title: "Thursday class notes"
+author: "Jessica Hunter"
+date: "3/10/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Notes
+
+when publishing have to have a compass and a scale bar
+
+
+```{r}
+# install.packages("ggmap")
+# install.packages("ggsn")
+#install.packages("rjson")
+```
+
+
+
+```{r}
+library(ggmap)
+library(tidyverse)
+library(here)
+library(ggsn)
+
+# register_google(key = "Write your API here", write = TRUE) ### use your own API
+#IMPORTANT don't put your key to github!! I usually save mine in a text file and import it each time
+# Setting write = TRUE will write the API key to your R environment so that you
+```
+
+
+
+```{r}
+ChemData<-read_csv(here("Week_7","data7","chemicaldata_maunalua.csv"))
+glimpse(ChemData)
+```
+
+
+```{r}
+Oahu<-get_map("Oahu")
+ggmap(Oahu)
+```
+
+
+```{r}
+WP<-data.frame(lon = -157.7621, lat = 21.27427) # coordinates for Wailupe
+# Get base layer
+Map1<-get_map(WP)
+# plot it
+ggmap(Map1)
+```
+
+
+
+
+## zoom in
+
+```{r}
+Map1<-get_map(WP,zoom = 17)
+ggmap(Map1)
+```
+
+## change map type
+
+```{r}
+Map1<-get_map(WP,zoom = 17, maptype = "satellite")
+ggmap(Map1)
+```
+
+
+##
+
+

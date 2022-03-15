@@ -1,0 +1,85 @@
+---
+title: "San Francisco Trees"
+author: "Jessica Hunter"
+date: "3/8/2022"
+output: 
+  html_document:
+    toc: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Intro
+
+
+
+## Libraries
+```{r}
+library(tidyverse)
+library(here)
+library(maps)
+library(mapproj)
+library(mapdata)
+library(ggplot2)
+```
+
+
+## load data
+sf_trees <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-28/sf_trees.csv')
+
+```{r}
+sf_trees <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-28/sf_trees.csv')
+```
+
+## Functions
+
+```{r}
+sanfran <- map_data("county") %>% 
+ filter(subregion == "san francisco")
+
+sf_trees_clean <-sf_trees %>% 
+  select(species, latitude, longitude) %>% 
+  separate(col = species,
+           into = c("scientific","common"),
+           sep = "::") 
+  
+  
+sf_common <- sf_trees_clean %>% 
+  select(common, latitude, longitude) %>% 
+  filter(common != "") %>% 
+  group_by(common, .add = TRUE) %>% 
+  add_count() %>% 
+  filter(n > 150)
+  #### cant get to work right
+  
+
+ggplot()+
+  # geom_polygon(data = sanfran,
+  #              aes(x = lat,
+  #                  y = long,
+  #                  group = group))+
+  geom_point(data = sf_common,
+             aes(x = longitude,
+                 y = latitude,
+                 color = common))+
+  coord_map(xlim = c(37.675,37.825),
+            ylim = c(-122.3, -122.5))
+
+```
+
+
+```{r}
+sf_common <- sf_trees_clean %>% 
+  select(common, latitude, longitude) %>% 
+  filter(common != "") %>% 
+  group_by(common) %>% 
+  count()
+```
+
+
+
+
+
+
