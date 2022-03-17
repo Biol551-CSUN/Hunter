@@ -1,0 +1,417 @@
+---
+title: "Class Notes"
+author: "Jessica Hunter"
+date: "3/16/2022"
+output: 
+  html_document:
+    toc: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Basics  
+
+ 5 Parts of a Script
+1. Intro - purpose, name, date  
+2. Libraries
+3. Load Data
+4. Functions
+5. Analysis  
+
+Terminal commands
+ Create folders in terminal  
+ $ cd week_4 ### to go to that directory cd means current directory  
+ to creATE A folder   
+ $ mkdir foldername - to make new folder  
+ cd ../ -  to go back up one folder    
+ install.packages("packagename")  - to install packages   
+ 
+ how to look at data
+ head(data) - look at top 6  
+ tail(dtata) - looks at bottom 6 lines  
+ view(data)  
+ glimpse()
+read in data ####
+read_csv and read reads the file - use underscore instead of .
+because brings in all characters as characters
+WeightData<-read_csv(here("week_2", "data", "weightdata.csv"))
+
+write_csv() to create files 
+
+ Data Viz  
+Responsible  
+1. Correct  
+2. Clear  
+3. Responsible  
+4. Awesome    
+
+
+Bad plots  
+1. too many legends  
+2. 3D  
+3. shadows  
+4. fonts weird  
+
+## Helpful Links
+
+### ggplots  
+[data to viz](https://www.data-to-viz.com/#histogram)  
+[ggplot cheat sheet](https://github.com/rstudio/cheatsheets/blob/master/data-visualization-2.1.pdf)  
+[all the geoms](https://ggplot2.tidyverse.org/reference/)  
+[master list of visuals](http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html)  
+[practical ggplot](https://wilkelab.org/practicalgg/)  
+[r graph gallery](https://www.r-graph-gallery.com/)    
+[ggplot extensions](https://exts.ggplot2.tidyverse.org/gallery/)  
+[ggplot resources](https://ggplot2-book.org/index.html)  
+
+### html viewing  
+
+[link to hack to use link and see like html](raw.githack.com)  
+
+### tables  
+
+[link to how to create tables](https://rfortherestofus.com/2019/11/how-to-make-beautiful-tables-in-r/)  
+[link for themes of outputs](https://www.datadreaming.org/post/r-markdown-theme-gallery/) 
+
+### gganimate
+
+[ggrepel link](https://ggrepel.slowkow.com/articles/examples.html)  
+[links to vingetts](https://patchwork.data-imaginist.com/articles/patchwork.html)  
+[link to gganimate](https://gganimate.com/articles/gganimate.html)  
+[link to magick](https://cran.r-project.org/web/packages/magick/vignettes/intro.html)  
+
+### r markdown
+
+[rmarkdown cheatsheet](https://www.rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf)   
+[rmd definitive guide](https://bookdown.org/yihui/rmarkdown/)  
+[rmd rstudio guide](https://rmarkdown.rstudio.com/)  
+
+
+
+
+
+
+
+
+
+
+
+
+## Git hub
+ write in terminal  
+**git pull** - downloads repository   
+**git add testscript.r** - i want to add new files to repo, stages  
+**git add week_3/** will add the whole folder  
+**git commit -a -m "I am adding testscrip.R"** - saves changes  
+ **-a** means commits to every change; all  
+ **-m** means I am adding a message  
+**git push** - downloads to internet  
+ commit often because reverting will go back to last commit  
+ to revert to last commit go to blue wheel  
+ 
+## ggplot
+ggplot(  
+data=penguins,  
+mapping = 
+aes( = color shape size alpha
+x = bill_depth_mm,  
+y= bill_length_mm,
+color = species,
+shape = island)))+
+geom_point()+
+labs(
+title = "Title",
+subtitle = "subtitle"
+x = "x label"
+y = 
+color = "blah"
+shape = 
+caption = 
+)+
+scale_color_viridisd()+  
+facet_grid(row~columns)  - 2D
+facet_wrap(~colums, ncol = 2) - 1D
+guides(color = FALSE)
+scale_color_continuous()
+scale_color_discrete()
+scale_color_manual()
+scale_{color, shape, x}_{discrete, manual, continuous}
+scale_x_continuous(limits = c(0,50)
+scale_x_continuous(breaks = c(14, 17, 21),
+  labels = c("low", "medium", "high"))
+scale_color_manual(values = c("orange", "purple", "green"))
+
+
+
+coord_flip(): Cartesian coordinate system with x and y axes flipped.
+coord_fixed(): Cartesian coordinate system with a fixed aspect ratio.
+coord_trans(x = "log10", y = "log10"): Apply arbitrary transformations to x and y positions, after the data has been processed by the stat.
+coord_polar(): Polar coordinates.
+coord_map()/coord_quickmap()/coord_sf(): Map projections.
+
+plot.title element controls the appearance of the plot title;   
+axis.ticks.x, the ticks on the x axis;   
+legend.key.height, the height of the keys in the legend.  
+theme(axis.title = element_text(size = 20,
+                                  color = "red"),
+        panel.background = element_rect(fill = "linen")))+
+theme_bw(), classic
+
+
+**ggsave(here("week_3", "output", "grouphomework4.png"),
+      width = 7, height = 5)**    
+**plot1 <- ggplot()** to save as object      
+
+
+
+
+### ggplotnotes 
+**c** means concatonate which means to bring together the vector
+**filter** for row and **select** is for column 
+**+** plus adds another layer
+ggplot works for everything
+**mapping** based on values in **aes(size = body_mass)**    
+**setting** not based on values goes in **geom_xxx(size = 2)**  
+
+jitter plots- great way to look at raw data in raw form, if logical groups exist,
+spaces out so points not on top of each other  
+beeswarmplots show amounts in a grou with amount of jitter dependent on density around values  
+scatterplots - 2 variables or map additional  
+histograms or density plots - show values within a group  
+more variables - map w/ colors size?  
+Marginal plot
+
+
+## tidyr  
+
+**filter(sex=="female")** - Pick observations by their values   
+ & is “and”, | is “or”, and ! is “not”.  
+complete.cases(.)
+
+**%>%** the pipe  
+
+**drop_na(sex)**  
+**arrange()** - Reorder the rows   
+**select(species, island, sex)** - Pick variables by their names   
+**mutate(log_mass = log(body_mass_g))** - Create new variables with functions of existing variables   
+**summarise(mean_flipper = mean(flipper_length_mm, na.rm=TRUE))** - Collapse many values down to a single summary  
+**groupby()**
+**separate**(
+  data = [data frame you are using],
+  col = [column that you want to separate],
+  into = [name of the new columns],
+  sep = [what are you separating by?])   
+**unite**(col = "Site_Zone", # the name of the NEW col #to unite the names
+        c(Site,Zone), # the columns to unite
+        sep = ".", # lets put a . in the middle
+        remove = FALSE) # keep the original  
+**pivot_longer**(cols = Temp_in:percent_sgd, # the cols you want to pivot. This says select the temp to percent SGD cols
+               names_to = "Variables", # the names of the new cols with all the column names
+               values_to = "Values") # names of the new column with all the values        
+  
+**pivot_wider**(names_from = Variables,
+                values_from = mean_vals)  
+                
+                  
+## lubridate
+
+library(tidyverse)  
+library(lubridate)  
+library(here)  
+now()  
+now(tzone = "EST")  
+today()  
+am(now())  
+leap_year(now())  
+lubridate symbols  
+ y - year  
+ m - month  
+ d - day  
+ h  
+ m   
+s  
+**date has to be a character**    
+ use _csv and not .cvs  
+
+ymd("2021-02-24") # or can type in the column 
+mdy("March 25, 1984") # slash or write out
+dmy()
+ymd_hms("2021-02-24 10:22:20 PM")
+mdy_hms("02/24/2021 22:22:20")
+mdy_hm("February 24 2021 10:22 PM")
+use c for vector
+ make a character string
+datetimes<-c("02/24/2021 22:22:20",
+             "02/25/2021 11:21:10",
+             "02/26/2021 8:01:52")
+convert to datetimes
+datetimes <- mdy_hms(datetimes)
+month(datetimes)
+month(datetimes, label = TRUE)
+month(datetimes, label = TRUE, abbr = FALSE) #Spell it out
+day(datetimes) # extract day
+wday(datetimes, label = TRUE) # extract day of week
+
+ make a character string
+datetimes<-c("02/24/2021 22:22:20", 
+             "02/25/2021 11:21:10", 
+             "02/26/2021 8:01:52") 
+             
+### convert to datetimes
+
+datetimes <- mdy_hms(datetimes) 
+month(datetimes, label = TRUE, abbr = FALSE) #Spell it out 
+day(datetimes) # extract day 
+wday(datetimes, label = TRUE) # extract day of week
+hour(datetimes)
+minute(datetimes)
+second(datetimes)
+datetimes + hours(4) # this adds 4 hours 
+s on end means to add information
+hour() extracts the hour component from a time and hours() is used to add 
+hours to a datetime
+datetimes + days(2) # this adds 2 days
+day() extracts the hour component from a time and days() is used to add hours to a datetime
+round_date(datetimes, "minute") # round to nearest minute
+round_date(datetimes, "5 mins") # round to nearest 5 minute
+
+
+## Creating functions  
+
+library(tidyverse)
+1. set up skeleton
+2. name function - easy
+3. enter arguments
+4. enter return
+5. add your defaults
+great for making a function that includes my style
+library(PNWColors)
+**tip** can put all in my functions in one script and write code to run that script
+** curly curly {{}}** tells r that this color is associated with a dat frame and not floating vector
+```{r}
+library(tidyverse)
+F_to_C <- function(temp_F){
+  temp_C <- (temp_F-32) * 5 / 9
+  return(temp_C)
+  }
+```
+
+test it
+```{r}
+F_to_C(32)
+```
+
+```{r}
+# install.packages("PNWColors")
+library(palmerpenguins)
+library(PNWColors)
+pal <- pnw_palette("Lake",3,type = "discrete") # exclusive to color palette
+
+ggplot(penguins, aes(x = body_mass_g,
+                     y = bill_length_mm,
+                     color = island))+
+  geom_point()+
+  geom_smooth(method = "lm")+ # add a linear model
+  scale_color_manual("Island", values = pal)+
+  theme_bw()
+```
+
+
+```{r}
+myplot<-function(data, x, y){
+pal<-pnw_palette("Lake",3, type = "discrete") # my color palette 
+ggplot(data, aes(x = {{x}}, y = {{y}} , color = island))+
+  geom_point()+
+  geom_smooth(method = "lm")+ # add a linear model
+  scale_color_manual("Island", values=pal)+   # use pretty colors and change the legend title
+  theme_bw()
+}
+
+myplot(data = penguins, x = body_mass_g, y = bill_length_mm)
+```
+### add defaults
+```{r}
+myplot<-function(data = penguins, x, y){ # made a default data
+pal<-pnw_palette("Lake",3, type = "discrete") # my color palette 
+ggplot(data, aes(x = {{x}}, y = {{y}} , color = island))+
+  geom_point()+
+  geom_smooth(method = "lm")+ # add a linear model
+  scale_color_manual("Island", values=pal)+   # use pretty colors and change the legend title
+  theme_bw()
+}
+```
+
+### add an if-else statement
+```{r}
+a <- 4
+b <- 5
+
+#Suppose that if a > b then f should be = to 20, else f should be equal to 10. # Using if/else we:
+
+if (a > b) { # my question
+  f <- 20 # if it is true give me answer 1
+    } else { # else give me answer 2
+  f <- 10
+}
+f
+
+```
+
+plotting
+
+```{r}
+myplot<-function(data = penguins, x, y, lines=TRUE ){ # add new argument for lines
+pal<-pnw_palette("Lake",3, type = "discrete") # my color palette 
+if(lines==TRUE){
+ggplot(data, aes(x = {{x}}, y = {{y}} , color = island))+
+  geom_point()+
+  geom_smooth(method = "lm")+ # add a linear model
+  scale_color_manual("Island", values=pal)+   # use pretty colors and change the legend title
+  theme_bw()
+}
+else{
+ggplot(data, aes(x = {{x}}, y = {{y}} , color = island))+
+  geom_point()+
+  scale_color_manual("Island", values=pal)+   # use pretty colors and change the legend title
+  theme_bw()
+}
+}
+
+# test to see if remove lines
+myplot(x = body_mass_g, y = flipper_length_mm, lines = FALSE)
+```
+
+
+
+## Awesome r packages
+library(praise)  
+praise()  
+
+library(dadjoke)  
+dadjoke()  
+
+animals that talk to you
+library(cowsay)
+I want a shark to say hello
+say("hello", by = "shark")
+say(by ="random")
+
+catterplot uses cats in your graphs
+
+library(beepr)
+beep(5)
+
+devtools::install_github("sctyner/memer")
+library(memer)
+meme_list()
+meme_get("FryNotSure")
+meme_get("NoneOfMyBusiness") %>% 
+  meme_text_top("I don't always like coding", size = 28) %>% 
+  meme_text_bottom("But when I do\nIt's always today's totally awesome R package", size = 18)
+  
+library(fortunes)
+fortune()  
+

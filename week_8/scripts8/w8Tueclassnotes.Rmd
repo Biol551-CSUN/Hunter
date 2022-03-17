@@ -1,0 +1,163 @@
+---
+title: "Tuesday Class Notes"
+author: "Jessica Hunter"
+date: "3/15/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r}
+
+    # install.packages("patchwork") # - bringing plots together
+    # install.packages("ggrepel")#  - repel your labels on your plots
+    # install.packages("gganimate") # - add some animations to your plots
+    # install.packages("magick") # - photo processing
+
+```
+
+```{r}
+library(patchwork)
+library(ggrepel)
+library(gganimate)
+library(magick)
+library(ggplot2)
+library(here)
+library(palmerpenguins)
+```
+
+# Notes
+[ggrepel link](https://ggrepel.slowkow.com/articles/examples.html)  
+[links to vingetts](https://patchwork.data-imaginist.com/articles/patchwork.html)
+[link to gganimate](https://gganimate.com/articles/gganimate.html)
+magick puts visuals online
+[link to magick](https://cran.r-project.org/web/packages/magick/vignettes/intro.html)
+awesome R package
+remotes::install_github("andrewheiss/sourrr")
+library(sourrr)
+build_recipe(final_weight = 900, hydration = 0.75)
+
+## functions
+
+```{r}
+p1 <- penguins %>% 
+    ggplot(aes(x = body_mass_g, 
+             y = bill_length_mm, 
+             color = species))+
+  geom_point()
+p1
+```
+
+
+```{r}
+p2<-penguins %>%
+  ggplot(aes(x = sex, 
+             y = body_mass_g, 
+             color = species))+
+  geom_jitter(width = 0.2)
+p2
+```
+
+
+```{r}
+p1 + p2 +
+  plot_layout(guides = 'collect')+
+  plot_annotation(tag_levels = 'A')
+```
+```{r}
+p1/p2 +
+  plot_layout(guides = 'collect')+
+  plot_annotation(tag_levels = 'A')
+```
+
+
+
+```{r}
+ggplot(mtcars, aes(x = wt, 
+                   y = mpg, 
+                   label = rownames(mtcars))) +
+  geom_text() + # creates a text label
+  geom_point(color = 'red')
+
+
+
+```
+
+
+
+
+```{r}
+ggplot(mtcars, aes(x = wt, 
+                   y = mpg, 
+                   label = rownames(mtcars))) +
+  geom_text_repel() + # repel them
+  geom_point(color = 'red')
+
+
+```
+
+```{r}
+
+
+ggplot(mtcars, aes(x = wt, 
+                   y = mpg, 
+                   label = rownames(mtcars))) +
+  geom_label_repel() + # repel them 
+  geom_point(color = 'red')
+# label gives box and text gives no box
+
+```
+### label gives box and text gives no box
+
+view(mtcars)
+
+```{r}
+penguins %>%
+ggplot(aes(x = body_mass_g, 
+            y = bill_depth_mm, 
+            color = species)) +
+  geom_point() +
+  transition_states(
+    year, # what we are animating by
+    transition_length = 2,
+    state_length = 1
+  ) +
+  ease_aes("sine-in-out") + # or 'bounce-in-out'
+  ggtitle('Year: {closest_state}') # no plus!!!
+  anim_save(here("week_8","output8","mypengiungif.gif"))
+           # animate(penguins, renderer = gifski_renderer()))
+# state length is opause
+# transition length is 
+# curly bracket means take me out of quotes
+
+
+```
+
+## Magick 
+```{r}
+penguin<-image_read("https://pngimg.com/uploads/penguin/pinguin_PNG9.png")
+penguin
+```
+### Save plot as picture
+
+```{r}
+penguins %>%
+ggplot(aes(x = body_mass_g, 
+            y = bill_depth_mm, 
+            color = species)) +
+  geom_point() 
+  ggsave(here("week_8", "output8", "penguinplot.png"))
+```
+
+### make a composite plot
+
+```{r}
+penplot<-image_read(here("week_8","output8","penguinplot.png"))
+out <- image_composite(penplot, penguin, offset = "+70+30")
+out
+```
+
