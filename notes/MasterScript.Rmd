@@ -1,18 +1,18 @@
 ---
 title: "R Notebook"
 output:
-  html_notebook:
-    toc: yes
   html_document:
     toc: yes
     df_print: paged
+  html_notebook:
+    toc: yes
 ---
 
 
 ## gganimate
 
 
-```{r}
+```{r, message=FALSE,results='hide'}
 library(patchwork)
 library(ggrepel)
 library(gganimate)
@@ -74,7 +74,7 @@ ggplot(mtcars, aes(x = wt,
 ggplot(mtcars, aes(x = wt, 
                    y = mpg, 
                    label = rownames(mtcars))) +
-  geom_text_repel() + # repel them
+  geom_text_repel(max.overlaps = Inf) + # repel them
   geom_point(color = 'red')
 
 
@@ -86,7 +86,8 @@ ggplot(mtcars, aes(x = wt,
 ggplot(mtcars, aes(x = wt, 
                    y = mpg, 
                    label = rownames(mtcars))) +
-  geom_label_repel() + # repel them 
+  geom_label_repel(max.overlaps = Inf) + # repel them
+  labs(title = )
   geom_point(color = 'red')
 # label gives box and text gives no box
 
@@ -108,7 +109,7 @@ ggplot(aes(x = body_mass_g,
   ) +
   ease_aes("sine-in-out") + # or 'bounce-in-out'
   ggtitle('Year: {closest_state}') # no plus!!!
-  anim_save(here("week_8","output8","mypengiungif.gif"),
+  anim_save(here("notes","mypengiungif.gif"),
     nframes = 20)
            # animate(penguins, renderer = gifski_renderer()))
 # state length is opause
@@ -116,7 +117,9 @@ ggplot(aes(x = body_mass_g,
 # curly bracket means take me out of quotes
 
 
+
 ```
+![giffile](notes/mypenguingif.gif)
 
 ### Magick 
 ```{r}
@@ -131,8 +134,11 @@ ggplot(aes(x = body_mass_g,
             y = bill_depth_mm, 
             color = species)) +
   geom_point() 
-  ggsave(here("week_8", "output8", "penguinplot.png"))
+ # ggsave(here("week_8", "output8", "penguinplot.png"))
 ```
+![penguinpic](/week_8/output8/penguinplot.png)
+
+
 
 ### make a composite plot
 
@@ -146,13 +152,19 @@ out
 ## lubridate
 
 ```{r}
-
 library(tidyverse)
 library(lubridate)
 library(here)
+# make a character string
+datetimes<-c("02/24/2021 22:22:20", 
+             "02/25/2021 11:21:10", 
+             "02/26/2021 8:01:52") 
+# convert to datetimes
+datetimes <- mdy_hms(datetimes) 
 datetimes + hours(4) # this adds 4 hours
 datetimes + days(2) # this adds 2 days
 round_date(datetimes, "5 mins")
+condata <- read_csv(here("week_5","data5", "CondData.csv"))
 condata <- condata %>% 
   mutate(dateandtime = mdy_hms(depth))
 glimpse(condata)
@@ -162,11 +174,11 @@ condata <- read_csv(here("week_5","data5", "CondData.csv")) %>% # read in the da
          dateandtime = round_date(dateandtime, "10 seconds")) %>% 
   drop_na() %>%  # dropping missing data to no more na's
   select(!depth)  # to remove the depth,
-view(condata)  
+# view(condata)  
 
 depdata <- read_csv(here("week_5", "data5", "DepthData.csv")) %>% 
   mutate(dateandtime = ymd_hms(date)) # have to list in the format it is in for program to find
-view(depdata)
+# view(depdata)
 
 dep_con_data <- inner_join(depdata,condata) %>% 
   select(!date) %>% 
@@ -196,7 +208,7 @@ when publishing have to have a compass and a scale bar
 library(ggmap)
 library(tidyverse)
 library(here)
-library(ggsn)
+# library(ggsn)
 
 # register_google(key = "Write your API here", write = TRUE) ### use your own API
 #IMPORTANT don't put your key to github!! I usually save mine in a text file and import it each time
@@ -208,5 +220,101 @@ library(ggsn)
 ```{r}
 ChemData<-read_csv(here("Week_7","data7","chemicaldata_maunalua.csv"))
 glimpse(ChemData)
+```
+
+## week 3
+
+```{r}
+library(tidyverse)
+library(palmerpenguins)
+library(beyonce)
+library(here)
+#devtools::install_github("dill/beyonce") if not already installed
+
+plot1<-ggplot(data=penguins, mapping = aes(x = bill_depth_mm, ### names plot
+                                    y = bill_length_mm,
+                                    group = species,
+                                    color = species))+
+  geom_point()+  ##creates point graph
+  geom_smooth(method = "lm") +
+  labs(x = "Bill Depth (mm)",
+       y = "Bill Length (mm)"
+       ) +
+  #scale_color_viridis_d()+ ## color blind safe colors
+scale_color_manual(values = beyonce_palette(10))+
+## scale has 3 parts color, shape
+##scale_color_continuous()
+scale_x_continuous(breaks = c(14,17,21), #limits sets the limits
+  labels = c("low", "medium", "high"))+
+  scale_y_continuous(limits = c(0,50))+ 
+  theme_bw()+
+  theme(axis.title = element_text(size = 20,
+                                  color = "red"),
+                                  panel.background = element_rect(fill = "purple"),
+                                  legend.background = element_rect(fill = "orange"))
+##make sure you put c in front means contatinous
+##breaks puts the breaks in the axis
+plot1
+#scale_color_manual(values = c("orange", "purple", "cyan"))
+
+
+## install.packages('devtools') to install the developmental packages that didn't go through peer review
+
+## beyonce color pallets https://github.com/dill/beyonce
+
+##library(beyonce)
+ #coord_fixed()
+#coord_polar("x")
+
+ggsave(here("week_3","output","penguin.png"),
+       width = 7, height = 5) # in inches
+```
+
+### week 3
+
+```{r}
+library(tidyverse)
+library(palmerpenguins)
+glimpse(penguins)
+
+ggplot(data = penguins, ###can use color, shape, size, and alpha (transparency)
+  mapping = aes(x = bill_depth_mm, ### x data ###
+                y = bill_length_mm, ### y data ###
+                size = body_mass_g,
+                alpha = flipper_length_mm, ###when I want the transparency to be based off the values
+                color = species,  ### I can also make color and shape different things##
+                shape = species))+  ### this adds color and shape to same category### 
+  geom_point() +  ### if I want all points to look the same I can put color, size and shape here
+  labs(title = "Bill Depth and Length",
+       subtitle = "dimensions of penguins",
+       x = "Bill Depth (mm)",
+       y = "Bill Length (mm)",
+       color = "Species",
+       shape = "Species",
+       caption = "Source: Palmer Station LTR / palmerpenguin package")+
+       scale_color_viridis_d() +
+#facet_grid (species~sex) ### means sex as a function of species+
+facet_wrap(~species) ### not a grid and wrapping by species, 
+### only columns use right of ~, only rows use left of ~, ncol to specify number of columns
+# + guides(color = FALSE) deletes legend
+```
+
+### box plot
+
+```{r}
+
+ggplot(penguins, aes(x=sex, y=body_mass_g, fill=sex)) + 
+  geom_boxplot()+ #a boxplot script
+  facet_wrap(~species, scale="free")+
+  scale_x_discrete(labels = c("Male","Female","Non binary"))+  ###if you dont want to use numbers
+  labs(title = "Body Mass by Species and Sex",  ##labels
+    y ="Body Mass (g)",
+        x = "Sex")+
+  theme_bw()+
+  theme(legend.position="none", #this removes the legend
+        axis.title = element_text(size = 15,
+                                        color = "black"),
+              panel.background = element_rect(fill = "linen"),
+        title = element_text(size = 20))
 ```
 

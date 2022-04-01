@@ -14,7 +14,7 @@ glimpse(penguins)
 ggplot(data = penguins, ###can use color, shape, size, and alpha (transparency)
   mapping = aes(x = bill_depth_mm, ### x data ###
                 y = bill_length_mm, ### y data ###
-                size = body_mass_g,
+                size = body_mass_g, ### size based off body mass
                 alpha = flipper_length_mm, ###when I want the transparency to be based off the values
                 color = species,  ### I can also make color and shape different things##
                 shape = species))+  ### this adds color and shape to same category### 

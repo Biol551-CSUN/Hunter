@@ -1,0 +1,307 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+
+```{r}
+
+```{r}
+sf_common_count <- sf_tree_names %>% 
+  #select(common) %>% 
+  group_by(common, .add = TRUE) %>% 
+  add_count()
+#filter(unique(sf_common_count$common))
+#%>% 
+
+#unique(common)
+```
+
+
+
+```{r}
+testvector<- unique.data.frame(sf_common_count)
+test2vector<-testvector$common
+test3vector<-testvector$n
+
+nameswitch<-function(input){
+  for (i in seq_along(test2vector))
+  print(switch(i,test3vector[i]))
+}
+if "Victorian Box" %in% test2vector print("true")
+
+vectornumber<- function(input1){
+  output<-test2vector
+  return(output)
+  
+}
+nameswitch("Victorian Box")
+test2vector[1]
+
+practice1<- function(y){
+  for(y in test2vector) 
+  print(y)
+}
+practice1("Victorian Box")
+
+function my_idea
+A = [ 1 2 5 7 ];
+n = 8;
+M = [ 3 4 6 9];
+for i= 1:n
+    switch i
+        case num2cell(A)
+            disp('suri');
+        case num2cell(M)
+            disp('kumar')
+        otherwise
+            disp('error')
+    end
+end
+end
+
+  switch(input,test3vector}
+input<-
+)
+```
+
+
+
+
+
+
+```{r}
+for(i in 1:5) print(1:i)
+i
+for(n in c(2,5,10,20,50)) {
+   x <- stats::rnorm(n)
+   cat(n, ": ", sum(x^2), "\n", sep = "")
+}
+f <- factor(sample(letters[1:5], 10, replace = TRUE))
+for(i in unique(f)) print(i)
+i
+1
+f
+n
+1
+for("Victorian Box" in sf_tree_names$common) print(sf_tree_names$scientific)
+switch
+c2s<- function(input) {
+  switch(input,)
+}
+```
+
+
+
+```{r}
+scientificname <- function(input){
+  if {{input}} %in% c("common", "othercommon"){
+  print(testvector$scientific)
+  }
+  output<-testvector %>% 
+    filter(common=={{input}} | othercommon=={{input}}) %>% 
+    select(scientific)
+  return(output$scientific)
+}
+
+
+hi<- testvector %>% 
+  filter(common=="Victorian Box" | othercommon=="Victorian Box") %>% 
+  select(scientific)
+print(hi$scientific)
+hi
+ 
+test<- if ("Victorian Box" %in% c("common", "othercommon")) {
+  print(scientific)
+}
+  #select(scientific)
+  print(test$scientific)
+  
+nameswitch<- function(name,type){
+  switch(type,
+         scientific = blah
+         common = blahblah
+           )
+}
+
+```
+
+
+
+```{r}
+common2scientific<-function(data = sf_tree_names, input){
+  output<-if((input %in% c("common","othercommon")
+    return(print({{sf_tree_names$scientificname}}))
+    return("check spelling and try again")))}
+```
+
+
+```{r}
+
+#%>% 
+filter(common=="Victorian Box")
+sf_trees_clean %>% 
+  ifelse(sf_trees_clean$common =="Victorian Box",sf_trees_clean$scientific,"check spelling")
+```
+
+
+## map plot that works
+
+
+example 
+```{r}
+maptrees<- sf_trees_clean %>% 
+  filter(scientific =="Acacia melanoxylon") %>% 
+  ggplot(aes(x=longitude,y=latitude))+
+  geom_point()+
+   geom_polygon(data = sanfran,
+                aes(y = lat,
+                    x = long,
+                    group = group,
+                    alpha = 0.2))+
+  coord_map(projection = "mercator",
+             ylim = c(37.69,37.825),
+             xlim = c(-122.5, -122.3))+
+  theme(legend.position = "none")
+#+
+#  ggmap(sfmap,zoom=17)
+maptrees
+
+```
+
+
+
+example works
+```{r}
+geocode("San Francisco County")
+sfdataframe<-data.frame(lon= -122.4194, lat= 37.77493)
+gmap1<-get_map(sfdataframe, zoom = 13, maptype = "satellite")
+ggmap(gmap1)+
+  geom_point(data = maptrees, 
+             aes(x=longitude,y=latitude,
+                 color = scientific))
+  
+
+##############################################
+# sfmap<-get_map("San Francisco")
+# ggmap(sfmap,zoom=17)+
+#   geom_point(data = maptrees,aes(x=longitude,y=latitude, scientific = "red"))
+# 
+# sfmap<-get_map("San Francisco")
+# maptrees<- sf_trees_clean %>%
+#   filter(scientific =="Acacia melanoxylon")
+# # %>%
+#   ggmap(sfmap,zoom=17)+
+#   #ggplot(aes(x=longitude,y=latitude))+
+#   geom_point(aes(x=longitude,y=latitude))
+  
+  # geom_polygon(data = sanfran,
+  #               aes(y = lat,
+  #                   x = long,
+  #                   group = group,
+  #                   alpha = 0.2))+
+  # coord_map(projection = "mercator",
+  #            ylim = c(37.69,37.825),
+  #            xlim = c(-122.5, -122.3))+
+  # theme(legend.position = "none")+
+  
+maptrees
+sfmap<-get_map("San Francisco")
+ggmap(sfmap,zoom=17)
+```
+
+
+
+
+
+```{r}
+treeplot<- function(data=maptrees, name){
+  maptrees<-sf_trees_clean %>% 
+    filter(scientific=="{{name}}")
+  #return(maptrees)
+}
+test3<- "hi"
+test2<-"Arbutus"
+test<- c("Arbutus","Ginkgo biloba")
+if (test %in% sf_trees_clean$scientific) {
+  print("yes")
+}else{
+  print(test2)
+}
+
+  print(test[2])
+test
+print(test[2])
+
+
+############## this one works
+geocode("San Francisco County")
+maptrees<- sf_trees_clean %>% 
+  filter(scientific =="Acacia melanoxylon")
+sfdataframe<-data.frame(lon= -122.4194, lat= 37.77493)
+gmap1<-get_map(sfdataframe, zoom = 13, maptype = "satellite")
+ggmap(gmap1)+
+  geom_point(data=maptrees,
+             aes(x=longitude,y=latitude,
+                 color = scientific))
+  
+```
+
+
+
+trying with ggmaps
+
+```{r}
+sfdataframe<-data.frame(lon= -122.4194, lat= 37.77493)
+gmap1<-get_map(sfdataframe, zoom = 13, maptype = "satellite")
+ggmap(gmap1)
+```
+
+
+
+### trying to use switch not working
+
+```{r}
+treenames<- unique.data.frame(sf_tree_names)
+practice5<- function(samplename, type, data=treenames){
+  switch(type,
+         scientific= {
+           if (samplename %in% treenames$scientific){
+    efgh<-filter(treenames, scientific=={{samplename}}) %>% 
+    print()
+         }
+         common = {if (samplename %in% treenames$common){
+    ijkl<-filter(treenames, common=={{samplename}}) %>% 
+    print()}
+         
+         
+           )
+  if (samplename %in% treenames$scientific){
+    efgh<-filter(treenames, scientific=={{samplename}}) %>% 
+    print()
+  } else{
+    print("no")
+  }
+}
+
+practice5("Ginkgo biloba")
+practice5("Cercis occidentalis")
+```
+
+
+
+```{r}
+practice7<-function(samplename,type, data=treenames){
+if (samplename %in% treenames$type){
+    filter(treenames, {{type}}=={{samplename}}) %>% 
+    print()
+} else {
+  print("error")
+}
+}
+practice7("Ginkgo biloba",scientific)
+```
+
+
+

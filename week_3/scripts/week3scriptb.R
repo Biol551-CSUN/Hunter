@@ -41,7 +41,7 @@ scale_x_continuous(breaks = c(14,17,21), #limits sets the limits
                                   legend.background = element_rect(fill = "orange"))
 ##make sure you put c in front means contatinous
 ##breaks puts the breaks in the axis
-
+plot1
 #scale_color_manual(values = c("orange", "purple", "cyan"))
 
 

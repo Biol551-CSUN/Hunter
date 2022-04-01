@@ -153,9 +153,23 @@ out
 library(tidyverse)
 library(lubridate)
 library(here)
+# make a character string
+datetimes<-c("02/24/2021 22:22:20", 
+             "02/25/2021 11:21:10", 
+             "02/26/2021 8:01:52") 
+# convert to datetimes
+datetimes <- mdy_hms(datetimes) 
+month(datetimes, label = TRUE, abbr = FALSE) #Spell it out 
+day(datetimes) # extract day 
+wday(datetimes, label = TRUE) # extract day of week
+
+hour(datetimes)
+minute(datetimes)
+second(datetimes)
 datetimes + hours(4) # this adds 4 hours
 datetimes + days(2) # this adds 2 days
 round_date(datetimes, "5 mins")
+condata <- read_csv(here("week_5","data5", "CondData.csv"))
 condata <- condata %>% 
   mutate(dateandtime = mdy_hms(depth))
 glimpse(condata)
@@ -199,7 +213,7 @@ when publishing have to have a compass and a scale bar
 library(ggmap)
 library(tidyverse)
 library(here)
-library(ggsn)
+#library(ggsn)
 
 # register_google(key = "Write your API here", write = TRUE) ### use your own API
 #IMPORTANT don't put your key to github!! I usually save mine in a text file and import it each time

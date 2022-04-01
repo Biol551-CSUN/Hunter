@@ -1,0 +1,185 @@
+---
+title: "Week 8 Homework"
+author: "Jessica Hunter"
+date: "3/29/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+## Introduction
+The purpose of this script is to create functions to view the locations of tree species in San Francisco and also see the 
+
+
+
+
+
+## Libraries
+
+```{r}
+library(tidyverse)
+library(here)
+library(maps)
+library(mapproj)
+library(mapdata)
+library(ggplot2)
+library(ggmap)
+```
+
+## Load Data
+Data from Tidy Tuesday January 28, 2022
+```{r}
+sf_trees <- read_csv(here("week_8","data8", "sf_trees.csv"))
+
+# sf_trees <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-28/sf_trees.csv')
+```
+
+## Functions
+This section contains the functions used to find the names and plot the locations of plant species.
+
+#### Filter data for San Francisco map
+
+```{r}
+# to make a map of san francisco
+sanfran <- map_data("county") %>% 
+ filter(subregion == "san francisco")
+
+```
+
+### Data cleaning of names of common and scientific species
+
+```{r}
+# separates the columns into the scientific or common name and cleans the data
+sf_trees_clean <-sf_trees %>% 
+  select(species, latitude, longitude) %>% 
+  separate(col = species,
+           into = c("scientific","common"),
+           sep = " :: ") %>% 
+  filter(common != "") %>% 
+  separate(col = scientific,
+           into = c("scientific", "trash"),
+           sep = " '") %>% 
+  separate(col = common,
+           into = c("common", "othercommon"),
+           sep = " '") %>% 
+  separate(col = othercommon,
+           into = c("othercommon"),
+           sep = "'") %>% 
+  separate(col = common,
+           into = c("common", "othercommon2"),
+           sep = ": ") %>%  
+  unite(col = "othercommon",
+       c(othercommon,othercommon2),
+       na.rm = TRUE) %>% 
+  select(scientific, common, othercommon, latitude, longitude) %>% 
+  filter(longitude> -122.4812) %>% 
+  drop_na(latitude)
+```
+
+
+
+### data with tree names
+
+```{r}
+
+left_sf_tree_names<-sf_trees_clean %>% 
+  select(common, scientific)
+
+left<-unique.data.frame(left_sf_tree_names)
+
+right_sf_tree_names<-sf_trees_clean %>% 
+  select(common=othercommon, scientific)
+right<-unique.data.frame(right_sf_tree_names)
+
+treenames<-full_join(left,right) %>% 
+  filter(common != "")
+
+
+```
+
+
+
+### prints tree scientific names from common names
+
+```{r}
+common2scientific<- function(samplename, data=treenames){
+  if (samplename %in% treenames$common){
+    abcd<-filter(treenames, common=={{samplename}}) %>% 
+    print()
+  } else{
+    print("make sure to use proper capitals and quotes around names")
+  }
+}
+
+```
+
+
+
+```{r}
+scientific2common<- function(samplename, data=treenames){
+  if (samplename %in% treenames$scientific){
+    abcd<-filter(treenames, scientific=={{samplename}}) %>% 
+    print()
+  } else{
+    print("no")
+  }
+}
+```
+
+
+
+### Function where you enter scientific tree name and plots on maps
+```{r}
+sftreeplot<- function(samplename,data=sf_trees_clean){
+  if (samplename %in% sf_trees_clean$scientific){
+    abcd<-filter(sf_trees_clean, scientific=={{samplename}}) %>% 
+      ggplot()+
+  geom_point(aes(x=longitude,y=latitude,
+                 color = scientific))+
+    geom_polygon(data = sanfran,
+                aes(y = lat,
+                    x = long,
+                    group = group,
+                    alpha = 9))+
+  coord_map(projection = "mercator",
+             ylim = c(37.69,37.825),
+             xlim = c(-122.5, -122.3))+
+  theme(legend.position = "none")+
+      guides(fill=FALSE)
+  abcd
+  } else{
+    print("error:Did you place in quotes?")
+  }
+}
+
+
+```
+
+
+## Analysis Examples
+
+### List the common names for the scientific name "Ginkgo biloba"
+
+```{r}
+scientific2common("Ginkgo biloba")
+```
+
+### List the scientific name for the common name "Autumn Gold"
+```{r}
+common2scientific("Autumn Gold")
+```
+
+### Plot the locations of tree species "Ginkgo biloba" in San Francisco County
+
+```{r}
+sftreeplot("Ginkgo biloba")
+```
+
+### Plot the locations of tree species "Cercis occidentalis" in San Francisco County
+```{r}
+sftreeplot("Cercis occidentalis")
+```
+
+

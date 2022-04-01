@@ -74,7 +74,7 @@ name function
 ```
 
 put in equation  
-out in argumant  
+put in argumant  
 what value i want returned back? temp c  
 ```{r}
 F_to_C <- function(temp_F){

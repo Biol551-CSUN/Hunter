@@ -27,7 +27,6 @@ library(ggplot2)
 
 
 ## load data
-sf_trees <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-28/sf_trees.csv')
 
 ```{r}
 sf_trees <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-28/sf_trees.csv')
@@ -36,15 +35,19 @@ sf_trees <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/t
 ## Functions
 
 ```{r}
+# to make a map of san francisco
 sanfran <- map_data("county") %>% 
  filter(subregion == "san francisco")
 
+# creates the columns into the scientific or common name
 sf_trees_clean <-sf_trees %>% 
   select(species, latitude, longitude) %>% 
   separate(col = species,
            into = c("scientific","common"),
-           sep = "::") 
-  
+           sep = " :: ") %>% 
+  filter(common != "")
+ 
+ view(sf_trees_clean)
   
 sf_common <- sf_trees_clean %>% 
   select(common, latitude, longitude) %>% 
@@ -54,18 +57,48 @@ sf_common <- sf_trees_clean %>%
   filter(n > 150)
   #### cant get to work right
   
+view(sf_common)
+amelm <- sf_common %>% 
+  filter(common == c("Victorian Box"))
+view(amelm)
+
+amelm<- amelm %>%
+  filter(latitude > 37.65,
+         longitude > -122.5) %>%
+  droplevels()
+
+
+unique(amelm$latitude)
+cityfilter<-sf_common %>% 
+  filter(longitude < min(long))
 
 ggplot()+
-  # geom_polygon(data = sanfran,
-  #              aes(x = lat,
-  #                  y = long,
-  #                  group = group))+
+   geom_polygon(data = sanfran,
+                aes(y = lat,
+                    x = long,
+                    group = group))+
+  geom_point(data = amelm,
+           aes(x = longitude,
+              y = latitude,
+             color = common))+
+   coord_map(projection = "mercator",
+             ylim = c(37.69,37.825),
+             xlim = c(-122.5, -122.3))+
+  theme(legend.position = "none")
+
+
+ggplot()+
+   geom_polygon(data = sanfran,
+                aes(x = long,
+                    y = lat,
+                    group = group))+
   geom_point(data = sf_common,
              aes(x = longitude,
                  y = latitude,
                  color = common))+
-  coord_map(xlim = c(37.675,37.825),
-            ylim = c(-122.3, -122.5))
+  coord_map(ylim = c(37.69,37.825),
+            xlim = c(-122.5, -122.3))+
+  theme(legend.position = "none")
 
 ```
 
@@ -75,11 +108,104 @@ sf_common <- sf_trees_clean %>%
   select(common, latitude, longitude) %>% 
   filter(common != "") %>% 
   group_by(common) %>% 
-  count()
+  add_count()
+```
+
+new function
+```{r}
+
+  
+
+treeminmaxlatlong <- sf_common %>% 
+  filter(latitude < 37.81522 | latitude > 37.70062,
+         longitude < -122.3208 | longitude > -122.4696) %>% 
+  group_by(latitude) %>% 
+  summarize(longmin = min(longitude, na.rm = TRUE),
+            longmax = max(longitude, na.rm = TRUE))
+
+avglong <- sf_common %>% 
+  mutate(avgminlong = )
+
+
+
+sfminmaxlat <- sanfran %>% 
+  group_by(long) %>% 
+  summarise(latmin = min(lat, na.rm = TRUE),
+            latmax = max(lat, na.rm = TRUE))
+
 ```
 
 
+```{r}
+
+  
+  # add_count()
+
+sfminmaxlong <- sanfran %>% 
+  group_by(lat) %>% 
+  summarize(longmin =  min(long, na.rm = TRUE),
+            longmax = max(long, na.rm = TRUE))  %>% 
+  mutate(abc = c("a","b","c","d","e","f","g","h","i"))
 
 
+x <- sfminmaxlong$lat
+a <- x[1]
+b <- x[2]
+c <- x[3]
+d <- x[4]
+e <- x[5]
+f <- x[6]
+g <- x[7]
+h <- x[8]
+i <- x[9]
+x
+library(dplyr)
+sfmap <- sfminmaxlong %>% 
+  mutate(latitude = lat)
 
+
+sftrees <- amelm %>% 
+  filter(common != "") %>% 
+  group_by(common) %>% 
+  mutate(latitude, avglat =
+           if_else(between(latitude,37.7006,mean(37.70062,37.71781)),37.71781,
+if_else(between(latitude,mean(37.70062,37.71781),mean(37.71781,37.72927)),37.72927,
+if_else(between(latitude,mean(37.71781,37.72927),mean(37.72927,37.73500)),37.73500,
+if_else(between(latitude,mean(37.72927,37.73500),mean(37.73500,37.76365)),37.76365,
+if_else(between(latitude,mean(37.73500,37.76365,mean(37.76365,37.78657)),37.78657,
+if_else(between(latitude,mean(37.76365,37.78657),mean(37.78657,37.79230)),37.79230,
+if_else(between(latitude,mean(37.78657,37.79230),mean(37.79230,37.80376)),37.80376,
+if_else(between(latitude,mean(37.79230,37.80376),37.81522)),37.81522,0)))))))))
+
+         
+ 
+#c,d),mean(d,e))),"e",
+ #  d,e),mean(e,f))),"f",
+   if_else(between(latitude,mean(e,f),mean(f,g))),"g",
+   if_else(between(latitude,mean(f,g),mean(g,h))),"h",
+   if_else(between(latitude,mean(g,h),i)),"i","NA")
+  
+
+
+sftrees <- amelm %>% 
+  filter(common != "") %>% 
+  group_by(common) %>% 
+  mutate(avglat = mean(a,b),"b","z")
+```
+
+```{r}
+sftrees <- amelm %>% 
+  filter(common != "") %>% 
+  #group_by(common) %>% 
+  mutate(
+    avglat = if_else(amelm$latitude > mean(37.70062,37.71781),37.71781,
+if_else(amelm$latitude > mean(37.71781,37.72927),37.72927,
+if_else(amelm$latitude > mean(37.72927,37.73500),37.73500,
+if_else(latitude > mean(37.73500,37.76365),37.76365,
+if_else(latitude > mean(37.76365,37.78657),37.78657,
+if_else(latitude > mean(37.78657,37.79230),37.79230,
+if_else(latitude > mean(37.79230,37.80376),37.80376,
+if_else(latitude > 37.80376,37.81522,0)))))))))
+
+```
 

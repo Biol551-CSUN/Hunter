@@ -108,7 +108,7 @@ round_date(datetimes, "5 mins") # round to nearest 5 minute
 # datetime. Use the %>% to keep everything clean.
 
 condata <- read_csv(here("week_5","data5", "CondData.csv"))
-head(condata)
+# head(condata)
 # error i wrote in but didn't save
 # always has to assign to if change or
 # or use pipe

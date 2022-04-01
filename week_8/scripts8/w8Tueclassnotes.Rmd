@@ -128,7 +128,8 @@ ggplot(aes(x = body_mass_g,
   ) +
   ease_aes("sine-in-out") + # or 'bounce-in-out'
   ggtitle('Year: {closest_state}') # no plus!!!
-  anim_save(here("week_8","output8","mypengiungif.gif"))
+  anim_save(here("week_8","output8","mypengiungif.gif"),
+            nframes = 20)
            # animate(penguins, renderer = gifski_renderer()))
 # state length is opause
 # transition length is 

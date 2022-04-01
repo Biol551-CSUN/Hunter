@@ -1,0 +1,119 @@
+
+---
+title: "Good Plot Bad Plot"
+author: "Jessica Hunter"
+date: "3/19/2022"
+output:
+  html_document:
+    toc: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+This is an example of a good script and a bad script of a plot
+
+## Libraries
+These are the libraries needed for this script to run
+
+```{r, warning=FALSE, echo=TRUE, error=FALSE, results='hide', message=FALSE}
+library(tidyverse)
+library(ggplot2)
+library(here)
+library(palmerpenguins)
+
+```
+
+## Data
+This is the data needed for this plot
+```{r}
+view(penguins)
+unique(penguins$year)
+penguins %>% 
+  select(species, year, body_mass_g) %>% 
+  group_by(species) %>%
+  summarise(mean = mean(body_mass_g)) %>% 
+  ggplot(x = year, y = mean,
+               color = species)+
+  geom_bar()
+ggplot_build()
+
+```
+
+## Functions
+
+```{r}
+#view(penguins)
+#unique(penguins$year)
+data1<-penguins %>% 
+  group_by(species, year) %>% 
+  #summarise(mean = mean((body_mass_g),na.rm=TRUE)) %>%
+  ggplot(data1, mapping = aes(y = body_mass_g, 
+             x = year, color = species, fill = species))+
+  geom_col()+
+  facet_wrap(~species)+
+ 
+              # color = species
+# ggplot_build()
+#view()
+data1
+```
+```{r}
+data1<-penguins %>% 
+  group_by(year) %>% 
+  #summarise(mean = mean((body_mass_g),na.rm=TRUE)) %>%
+  ggplot(data1, mapping = aes(y = body_mass_g, 
+             x = species, 
+             color = species, fill = species))+
+  
+  geom_point(size = 2, color = "black")+
+  geom_col()+
+  facet_wrap(~year)
+              
+# color = species
+# ggplot_build()
+#view()
+data1
+```
+new 
+```{r}
+data1<-penguins %>% 
+  group_by(year) %>% 
+  #summarise(mean = mean((body_mass_g),na.rm=TRUE)) %>%
+  ggplot(data1, mapping = aes(y = body_mass_g, 
+             x = species, color = species, fill = species))+
+ stat_density2d_filled()
+data1
+
+
+
+
+install.packages("gridExtra")
+library(ggplot2)
+library(gridExtra)
+library(dplyr)
+
+se <- function(x){sd(x)/sqrt(length(x))}
+my_dat <- summarise(group_by(mtcars, cyl),
+                    my_mean = mean(disp),
+                    my_se = se(disp))
+p1 <- ggplot() + 
+  geom_bar(data = my_dat,
+           aes(y = my_mean, x = cyl,
+               ymin = my_mean - my_se,
+               ymax = my_mean + my_se), stat="identity", width=0.75) + 
+  geom_errorbar(data = my_dat,
+                aes(y = my_mean, x = cyl,
+                    ymin = my_mean - my_se,
+                    ymax = my_mean + my_se), stat="identity", width=0.75) + 
+  geom_point(data = mtcars, aes(y = disp, x = cyl, fill = cyl)) +
+  theme_classic() + ylim(c(0,500))
+```
+
+## Analysis
+
+
+
+

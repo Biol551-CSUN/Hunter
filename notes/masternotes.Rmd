@@ -5,23 +5,76 @@ date: "3/16/2022"
 output: 
   html_document:
     toc: TRUE
+    toc_depth: 2
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r setup, include=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, fig.width = 5, fig.height = 3)
 ```
 
 
 ## Basics  
 
- 5 Parts of a Script
-1. Intro - purpose, name, date  
-2. Libraries
-3. Load Data
-4. Functions
-5. Analysis  
+### rStudio basics   
+from week_1 lectures
 
-Terminal commands
+**script window** type what you want to do and run when ready, saves scripts  
+**"<-"** means to assign to object  
+**"#"** means to ignore, great pace for comments  
+spelling punctualization, capitalization all matter   
+functions are "canned scripts of convenient or complex commands  
+**"?"** in front of function is help and will ask r to tell you what it is  
+**help.search("function searching for")** if looking for a function to do a particular task e.g. helpsearch("ANOVA")   
+**apropos("nova")** when you can only remember part of the word  
+**console** whar r going to do, doesn't save 
+**">"** means ready
+**"+""** means waiting for more data, maybe didn't give enough info    
+[to install github](https://happygitwithr.com/install-git.html)  
+[password authentication help](https://happygitwithr.com/https-pat.html)  
+
+
+### Git hub basics  
+from week_2  
+
+ write in terminal  
+**git pull** - downloads repository   
+**git add testscript.r** - i want to add new files to repo, stages  
+**git add week_3/** will add the whole folder  
+**git commit -a -m "I am adding testscrip.R"** - saves changes  
+ **-a** means commits to every change; all  
+ **-m** means I am adding a message  
+**git push** - downloads to internet  
+ commit often because reverting will go back to last commit  
+ to revert to last commit go to blue wheel  
+ 
+### mardown for github readme  
+from week_2b  
+_sample_ for italics  
+**sample** for bold  
+**_sample_** italics and bold  
+**headers** with 1 to 5 "#", 1 being the biggest  
+**link** is "[linkname](actual link)"  
+**reference link** "[linkname][reference link]  
+[reference link](actual link)"  
+**blockquotes** use ">" symbol in front  
+**lists** use an "*" or "* " for sublist or numbers or combo  
+hardbreak or paragraph with 2 spaces after each line  
+[link to other markdown tutorials](https://www.markdowntutorial.com/conclusion/)  
+
+
+ 
+### 5 Parts of a Script 
+from week_2b  
+1. Intro - **purpose**, name, date  
+2. Libraries - name libraries using  
+3. Load Data - read in data  
+4. Functions - purpose of functions, functions I created    
+5. Analysis - analyze results, can be in different sections    
+comment comment comment - to give descriptions of each line  
+
+
+
+### Terminal commands
  Create folders in terminal  
  $ cd week_4 ### to go to that directory cd means current directory  
  to creATE A folder   
@@ -29,7 +82,7 @@ Terminal commands
  cd ../ -  to go back up one folder    
  install.packages("packagename")  - to install packages   
  
- how to look at data
+### how to look at data
  head(data) - look at top 6  
  tail(dtata) - looks at bottom 6 lines  
  view(data)  
@@ -41,19 +94,56 @@ WeightData<-read_csv(here("week_2", "data", "weightdata.csv"))
 
 write_csv() to create files 
 
- Data Viz  
+### Data Visualization  
+from week_3a&b   
+
 Responsible  
-1. Correct  
+1. Correct context  
 2. Clear  
 3. Responsible  
-4. Awesome    
+4. Awesome   
+5. units/labels
+6. emphasize important points  
+7. legends reduces eye jumping and go in logical order    
+8. **labels usually easier than legends**  
+9. put actual data  
+10. marginal plots - summarry plus raw
 
 
 Bad plots  
-1. too many legends  
+1. too many legends, points or variables    
 2. 3D  
 3. shadows  
 4. fonts weird  
+5. overwhelming  
+6. misleading with scales (reverse scale, increase scale size)
+
+ggplot default changes  
+1. update axis  
+2. reduce width of each group
+3. change colors
+4. x and y limits and expansion  
+5. remove unnecessary gridlines  
+6. remove abbreviations  
+
+## Libraries  
+**ggplot()** data visualization  
+**library(palmerpenguins)** data on penguins for practice  
+**library(tidyverse)**   
+**dplyr** (part of tidyverse) - manipulating data - filter, select, group, summary, mutate, remove NA  
+**library(here)** looks for naming scheme great for other transferring to other ppl computers with same folder naming scheme   
+**library(lubridate)** for times and dates manipulation  
+**library(kableExtra)** for displaying kable tables  
+library(maps)
+library(mapproj)
+library(mapdata)  
+**library(ggsn)** didn't work - adds compass and scale bars  
+**library(ggmaps)** for google maps  
+library(patchwork) - bring plots together  
+library(ggrepel) - repels labels on plot  
+library(gganimate) - adds animations  
+library(magick) - photo processing  
+
 
 ## Helpful Links
 
@@ -66,6 +156,11 @@ Bad plots
 [r graph gallery](https://www.r-graph-gallery.com/)    
 [ggplot extensions](https://exts.ggplot2.tidyverse.org/gallery/)  
 [ggplot resources](https://ggplot2-book.org/index.html)  
+[emojifont link info](https://cran.r-project.org/web/packages/emojifont/vignettes/emojifont.html)    
+
+### dplyr  
+[dplyr cheat sheet](https://raw.githubusercontent.com/rstudio/cheatsheets/main/data-transformation.pdf)  
+
 
 ### html viewing  
 
@@ -76,7 +171,7 @@ Bad plots
 [link to how to create tables](https://rfortherestofus.com/2019/11/how-to-make-beautiful-tables-in-r/)  
 [link for themes of outputs](https://www.datadreaming.org/post/r-markdown-theme-gallery/) 
 
-### gganimate
+### gganimate, ggrepel, and magick  
 
 [ggrepel link](https://ggrepel.slowkow.com/articles/examples.html)  
 [links to vingetts](https://patchwork.data-imaginist.com/articles/patchwork.html)  
@@ -88,74 +183,83 @@ Bad plots
 [rmarkdown cheatsheet](https://www.rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf)   
 [rmd definitive guide](https://bookdown.org/yihui/rmarkdown/)  
 [rmd rstudio guide](https://rmarkdown.rstudio.com/)  
+[output git hub doc](https://rmarkdown.rstudio.com/github_document_format.html)  
+[different typres of outputs](https://rmarkdown.rstudio.com/lesson-9.html)  
+
+### ggmaps
+[different projections link](https://rdrr.io/cran/mapproj/man/mapproject.html) 
+[advanced maps](https://geocompr.robinlovelace.net/adv-map.html)  
+[Bathymetry example](http://ben-williams.github.io/updated_ggplot_figures.html#maps)  
+[Earth lab](https://www.earthdatascience.org/courses/earth-analytics/spatial-data-r/understand-epsg-wkt-and-other-crs-definition-file-types/)  
+[ggmap article](http://stat405.had.co.nz/ggmap.pdf)  
+[making plots with ggmap](https://www.littlemissdata.com/blog/maps)  
+[setting up ggmaps](https://www.findingyourway.io/blog/2018/12/05/2018-12-05-using-ggmap-after-july-2018/)  
 
 
+## ggplot 
+
+### ggplotnotes 
+**c** means concatonate which means to bring together the vector  
+**filter** for row and **select** is for column   
+**+** plus adds another layer  
+ggplot works for everything
+**mapping** based on values in **aes(size = body_mass)**    
+**setting** not based on values goes in **geom_xxx(size = 2)**  
+
+**jitter plots**- great way to look at raw data in raw form, if logical groups exist,
+spaces out so points not on top of each other  
+**beeswarmplots** show amounts in a grou with amount of jitter dependent on density around values  
+**scatterplots** - 2 variables or map additional  
+**histograms or density plots** - show values within a group  
+**more variables** - map w/ colors size?  
+Marginal plot
 
 
-
-
-
-
-
-
-
-
-## Git hub
- write in terminal  
-**git pull** - downloads repository   
-**git add testscript.r** - i want to add new files to repo, stages  
-**git add week_3/** will add the whole folder  
-**git commit -a -m "I am adding testscrip.R"** - saves changes  
- **-a** means commits to every change; all  
- **-m** means I am adding a message  
-**git push** - downloads to internet  
- commit often because reverting will go back to last commit  
- to revert to last commit go to blue wheel  
- 
-## ggplot
-ggplot(  
+### main  
+from week_3  
+**ggplot(**  
 data=penguins,  
-mapping = 
-aes( = color shape size alpha
-x = bill_depth_mm,  
-y= bill_length_mm,
-color = species,
-shape = island)))+
-geom_point()+
-labs(
-title = "Title",
-subtitle = "subtitle"
-x = "x label"
-y = 
-color = "blah"
-shape = 
-caption = 
-)+
-scale_color_viridisd()+  
-facet_grid(row~columns)  - 2D
-facet_wrap(~colums, ncol = 2) - 1D
-guides(color = FALSE)
-scale_color_continuous()
-scale_color_discrete()
-scale_color_manual()
-scale_{color, shape, x}_{discrete, manual, continuous}
-scale_x_continuous(limits = c(0,50)
-scale_x_continuous(breaks = c(14, 17, 21),
-  labels = c("low", "medium", "high"))
-scale_color_manual(values = c("orange", "purple", "green"))
+**mapping** =  (maps points)   
+**aes**( = color shape size alpha  #aesthetics mapped to a variable
+x = bill_depth_mm,    
+y= bill_length_mm,  
+color = species,  
+shape = island)))+  
+**+geom_point**()+  
+**+labs**(  
+title = "Title",  
+subtitle = "subtitle"  
+x = "x label"  
+y = "y label"   
+color = "blah"  
+shape = "shape label"   
+caption = "write caption here"   
+)+  
+scale_color_viridisd()+    
+**+**facet_grid(row~columns)  - 2D  
+**+**facet_wrap(~colums, ncol = 2) - 1D  
+**+**guides(color = FALSE)  
+scale_color_continuous()  
+scale_color_discrete()  
+scale_color_manual()    
+scale_{color, shape, x}_{discrete, manual, continuous}  
+scale_x_continuous(limits = c(0,50)  
+**scale_x_continuous**(breaks = c(14, 17, 21),  
+  labels = c("low", "medium", "high"))  
+scale_color_manual(values = c("orange", "purple", "green"))  
 
 
 
-coord_flip(): Cartesian coordinate system with x and y axes flipped.
-coord_fixed(): Cartesian coordinate system with a fixed aspect ratio.
-coord_trans(x = "log10", y = "log10"): Apply arbitrary transformations to x and y positions, after the data has been processed by the stat.
-coord_polar(): Polar coordinates.
-coord_map()/coord_quickmap()/coord_sf(): Map projections.
+coord_flip(): Cartesian coordinate system with x and y axes flipped.  
+coord_fixed(): Cartesian coordinate system with a fixed aspect ratio.  
+coord_trans(x = "log10", y = "log10"): Apply arbitrary transformations to x and y positions, after the data has been processed by the stat.  
+coord_polar(): Polar coordinates.  
+coord_map()/coord_quickmap()/coord_sf(): Map projections.  
 
 plot.title element controls the appearance of the plot title;   
 axis.ticks.x, the ticks on the x axis;   
 legend.key.height, the height of the keys in the legend.  
-theme(axis.title = element_text(size = 20,
+**+theme**(axis.title = element_text(size = 20,
                                   color = "red"),
         panel.background = element_rect(fill = "linen")))+
 theme_bw(), classic
@@ -165,133 +269,710 @@ theme_bw(), classic
       width = 7, height = 5)**    
 **plot1 <- ggplot()** to save as object      
 
+### example 
+```{r}
+library(tidyverse)
+library(palmerpenguins)
+ggplot(data = penguins, ###can use color, shape, size, and alpha (transparency)
+  mapping = aes(x = bill_depth_mm, ### x data ###
+                y = bill_length_mm, ### y data ###
+                size = body_mass_g, ### size based off body mass
+                alpha = flipper_length_mm, ###when I want the transparency to be based off the values
+                color = species,  ### I can also make color and shape different things##
+                shape = species))+  ### this adds color and shape to same category### 
+  geom_point() +  ### if I want all points to look the same I can put color, size and shape here
+  labs(title = "Bill Depth and Length",
+       subtitle = "dimensions of penguins",
+       x = "Bill Depth (mm)",
+       y = "Bill Length (mm)",
+       color = "Species",
+       shape = "Species",
+       caption = "Source: Palmer Station LTR / palmerpenguin package")+
+       scale_color_viridis_d() +
+#facet_grid (species~sex) ### means sex as a function of species+
+facet_wrap(~species)  ### not a grid and wrapping by species, 
+### only columns use right of ~, only rows use left of ~, ncol to specify number of columns
+#guides(color = FALSE) #deletes legend
+```
+
+
+## dplyr  
+from week_4a  
+part of tidyverse  
+### filter
+**filter()** extract rows  
+ filter(data_to_transform, stuff the verb does) 
+   
+ **==** - is exactly equal to  
+ **<=** less than or equal to  
+ **>=**  
+ **!=** not equal to  
+ **x %in% y** in (group membership)   
+ **is.na(x)** is missing  
+ **!is.na(x)** is not missing  
+ **&** and  
+ **|** or  
+ **!** not  
+e.g  
+**filter**(.data = penguins, sex == "female") 
+**filter**(.data = penguins,  
+     island %in% c("Dream", "Briscoe")) # data in dream and briscoe 
+**filter**(data= penguins,  
+     body_mass_g > 5000,  
+     body_mass_g < 3000) # body mass between 3k and 5k    
+**filter(sex=="female")** - Pick observations by their values   
+ & is “and”, | is “or”, and ! is “not”.  
+ 
+      
+### select  
+**select()** extract columns   
+**select(species, island, sex)** - Pick variables by their names  
+
+### arrange and relocate   
+**arrange()** arrange/sort rows  
+put in alphabetical order  
+```{r eval=FALSE, include=TRUE}
+EnviroData_wide<- EnviroData %>% 
+  pivot_wider(names_from = parameter.measured,
+              values_from = values) %>% 
+  arrange(site.letter)
+view(EnviroData_wide)
+```
+relocate example  
+puts character data on left and numeric data on right  
+```{r eval=FALSE, include=TRUE}
+# left join add the right to the left and excludes anything not in left
+FullData_left<-left_join(TPCData,EnviroData_wide) %>% 
+  relocate(where(is.numeric), .after = where(is.character)) %>% 
+  arrange(site.letter) 
+```
 
 
 
-### ggplotnotes 
-**c** means concatonate which means to bring together the vector
-**filter** for row and **select** is for column 
-**+** plus adds another layer
-ggplot works for everything
-**mapping** based on values in **aes(size = body_mass)**    
-**setting** not based on values goes in **geom_xxx(size = 2)**  
+### mutate  
+**mutate(data, stuff it does)** make new columns  
+mutate_at(.table, .variables, .functions, ..., .cols = NULL) - affects variables with a character vector or vars()  
+e.g.  
+mutate_at(vars(-group_cols(), ...), myoperation)  
+mutate_at(vars(matches("Sepal")), log)
+mutate_if(.table, .predicate, .functions, ...) - selects variables with predicate function    
+mutate_all(.table, .functions, ...)- affects every variable   
+[link with decription of mutate](https://dplyr.tidyverse.org/reference/mutate_all.html)  
+implicit is _all or _is and explicit is _at  
+**ifelse**(test, value_if_true, value_if_false)  
+mutate(.data = penguins, after_2008 = ifelse(year>2008, "After 2008", "Before 2008"))  
+**drop_na(sex)** to drop rows with NAs from column sex  
+**mutate(log_mass = log(body_mass_g))** - Create new variables with functions of existing variables   
 
-jitter plots- great way to look at raw data in raw form, if logical groups exist,
-spaces out so points not on top of each other  
-beeswarmplots show amounts in a grou with amount of jitter dependent on density around values  
-scatterplots - 2 variables or map additional  
-histograms or density plots - show values within a group  
-more variables - map w/ colors size?  
-Marginal plot
+### the pipe  
+
+**%>%** the pipe means "and then"  
+
+
+### group_by and summarize  
+
+**group_by() %>% summarize()** to make group summaries  
+ 
+
+**summarise(mean_flipper = mean(flipper_length_mm, na.rm=TRUE))** - Collapse many values down to a single summary  
+to exclude NA's is na.rm=TRUE  
+**.groups** in summarize can override ___  
+
+**group_by()** by itself does nothing with summarize is great   
 
 
 ## tidyr  
+from week_4b -part of tidyverse    
+library(tidyverse)  
+library(here)  
 
-**filter(sex=="female")** - Pick observations by their values   
- & is “and”, | is “or”, and ! is “not”.  
-complete.cases(.)
+### another way to remove NAs  
+filter(**complete.cases(.)**) filters out everything that isn't a complete row  
+  
+### seperate   
+**separate**( - this functions deletes the original column  
+  data = [data frame you are using],  
+  col = [column that you want to separate],  
+  into = [name of the new columns],  
+  sep = [what are you separating by?])     
 
-**%>%** the pipe  
+### unite  
+**unite**(col = "Site_Zone", # the name of the NEW col #to unite the names  
+        c(Site,Zone), # the columns to unite  
+        sep = ".", # lets put a . in the middle  
+        remove = FALSE) # keep the original    
+unite unites two columns into one  
 
-**drop_na(sex)**  
-**arrange()** - Reorder the rows   
-**select(species, island, sex)** - Pick variables by their names   
-**mutate(log_mass = log(body_mass_g))** - Create new variables with functions of existing variables   
-**summarise(mean_flipper = mean(flipper_length_mm, na.rm=TRUE))** - Collapse many values down to a single summary  
-**groupby()**
-**separate**(
-  data = [data frame you are using],
-  col = [column that you want to separate],
-  into = [name of the new columns],
-  sep = [what are you separating by?])   
-**unite**(col = "Site_Zone", # the name of the NEW col #to unite the names
-        c(Site,Zone), # the columns to unite
-        sep = ".", # lets put a . in the middle
-        remove = FALSE) # keep the original  
+### pivot wide to long  
+easier to summarize using group_by because you only need to group by variable name    
+easier to facet_wrap is all plot identical you don't have to make 10 individual plots 
+
 **pivot_longer**(cols = Temp_in:percent_sgd, # the cols you want to pivot. This says select the temp to percent SGD cols
                names_to = "Variables", # the names of the new cols with all the column names
                values_to = "Values") # names of the new column with all the values        
-  
++ facet_wrap(~Variables,
+scale = "free") to make the scales different and uniform  
+
+### pivot long to wide    
 **pivot_wider**(names_from = Variables,
                 values_from = mean_vals)  
                 
-                  
+**example**
+
+```{r eval=FALSE, include=TRUE}
+ChemData_clean<-ChemData %>%
+  filter(complete.cases(.)) %>% #filters out everything that is not a complete row
+  separate(col = Tide_time, # choose the tide time col
+           into = c("Tide","Time"), # separate it into two columns Tide and time
+           sep = "_", # separate by _
+           remove = FALSE) %>%
+  pivot_longer(cols = Temp_in:percent_sgd, # the cols you want to pivot. This says select the temp to percent SGD cols  
+               names_to = "Variables", # the names of the new cols with all the column names 
+               values_to = "Values") %>% # names of the new column with all the values 
+  group_by(Variables, Site, Time) %>% 
+  summarise(mean_vals = mean(Values, na.rm = TRUE)) %>%
+  pivot_wider(names_from = Variables, 
+              values_from = mean_vals) %>% # notice it is now mean_vals as the col name
+  write_csv(here("Week_4","output","summary.csv"))  # export as a csv to the right folder
+
+# summarise() has grouped output by 'Variables', 'Site'. You can override using the .groups argument.
+```
+
+## joins  
+from week_5a  
+joins - join data from 2 files  
+tibble - creates a table in r  
+
+
+create tibble  
+tibble1<-tibble(Site.ID = c("A", "B", "C", "D"),  
+                Temperature = c(14.1, 16.7, 15.3, 12.8))  
+tibble1
+
+tibble2<-tibble(Site.ID = c("A", "B", "D", "E"),  
+                ph = c(7.3, 7.8, 8.1, 7.9))  
+tibble2  
+
+**left_join**(tibble1, tibble2) joins to left and retains left data  
+**right_join**(tibble1, tibble2) joins to right and retains only right data   
+**inner_join**(tibble1, tibble2) # only retains the ones in both  
+**full_join**(tibble1, tibble2) # reatains everything and has NA's for missing  
+**semi_join**(tibble1, tibble2) # only retain complete in both but also only left side  
+**anti_join**(tibble1, tibble2) # keeps whatis in x thats completely missing in y (left side)  
+
+examples
+
+```{r eval=FALSE, include=TRUE}
+EnviroData_wide<- EnviroData %>% 
+  pivot_wider(names_from = parameter.measured,
+              values_from = values) %>% 
+  arrange(site.letter)
+view(EnviroData_wide)
+
+
+# left join add the right to the left and excludes anything not in left
+FullData_left<-left_join(TPCData,EnviroData_wide) %>% 
+  relocate(where(is.numeric), .after = where(is.character)) %>% 
+  arrange(site.letter) 
+### where is the data
+head(FullData_left)
+
+
+FullData_leftlong<-FullData_left %>% 
+  pivot_longer(cols = E:Topt,
+               names_to = "variables",
+               values_to = "values") %>% 
+  group_by(site.letter) %>% 
+  summarise(meandata = mean(values, na.rm = TRUE),
+            vardata = var(values, na.rm = TRUE))
+view(FullData_leftlong)
+```
+
+
 ## lubridate
 
 library(tidyverse)  
 library(lubridate)  
 library(here)  
-now()  
+**now**()  
 now(tzone = "EST")  
-today()  
+**today()**  
 am(now())  
-leap_year(now())  
-lubridate symbols  
+**leap_year(now())**  
+*lubridate symbols*  
  y - year  
  m - month  
  d - day  
- h  
- m   
-s  
+ h - hour    
+ m - minute     
+s - second   
 **date has to be a character**    
- use _csv and not .cvs  
+ use **_csv** and not .cvs  
 
-ymd("2021-02-24") # or can type in the column 
-mdy("March 25, 1984") # slash or write out
-dmy()
-ymd_hms("2021-02-24 10:22:20 PM")
-mdy_hms("02/24/2021 22:22:20")
-mdy_hm("February 24 2021 10:22 PM")
-use c for vector
- make a character string
-datetimes<-c("02/24/2021 22:22:20",
-             "02/25/2021 11:21:10",
-             "02/26/2021 8:01:52")
-convert to datetimes
-datetimes <- mdy_hms(datetimes)
-month(datetimes)
-month(datetimes, label = TRUE)
-month(datetimes, label = TRUE, abbr = FALSE) #Spell it out
-day(datetimes) # extract day
-wday(datetimes, label = TRUE) # extract day of week
+**ymd**("2021-02-24") # or can type in the column   
+mdy("March 25, 1984") # slash or write out  
+dmy()  
+**ymd_hms**("2021-02-24 10:22:20 PM")  
+mdy_hms("02/24/2021 22:22:20")  
+mdy_hm("February 24 2021 10:22 PM")  
+**use c for vector**  
+**make a character string**    
+datetimes<-c("02/24/2021 22:22:20",  
+             "02/25/2021 11:21:10",  
+             "02/26/2021 8:01:52")  
+**convert to datetimes**    
+datetimes <- mdy_hms(datetimes)  
+**month**(datetimes)  
+month(datetimes, label = TRUE)  
+**month(datetimes, label = TRUE, abbr = FALSE)** #Spell it out  
+**day**(datetimes) # extract day  
+**wday**(datetimes, label = TRUE) # extract day of week  
 
- make a character string
-datetimes<-c("02/24/2021 22:22:20", 
-             "02/25/2021 11:21:10", 
-             "02/26/2021 8:01:52") 
              
 ### convert to datetimes
 
-datetimes <- mdy_hms(datetimes) 
-month(datetimes, label = TRUE, abbr = FALSE) #Spell it out 
-day(datetimes) # extract day 
-wday(datetimes, label = TRUE) # extract day of week
-hour(datetimes)
-minute(datetimes)
-second(datetimes)
-datetimes + hours(4) # this adds 4 hours 
-s on end means to add information
-hour() extracts the hour component from a time and hours() is used to add 
-hours to a datetime
-datetimes + days(2) # this adds 2 days
-day() extracts the hour component from a time and days() is used to add hours to a datetime
-round_date(datetimes, "minute") # round to nearest minute
-round_date(datetimes, "5 mins") # round to nearest 5 minute
+datetimes <- mdy_hms(datetimes)   
+month(datetimes, label = TRUE, abbr = FALSE) #Spell it out   
+day(datetimes) # extract day   
+wday(datetimes, label = TRUE) # extract day of week  
+hour(datetimes)  
+minute(datetimes)  
+second(datetimes)  
+**datetimes + hours(4)** # this adds 4 hours   
+s on end means to add information  
+hour() extracts the hour component from a time and hours() is used to add   
+hours to a datetime  
+datetimes + days(2) # this adds 2 days  
+**day()** extracts the hour component from a time and **days()** is used to add hours to a datetime  
+**round_date**(datetimes, "minute") # round to nearest minute  
+round_date(datetimes, "5 mins") # round to nearest 5 minute  
+
+example 
+```{r eval=FALSE, include=TRUE}
+# this function joins the two data together where there are no NA's and only exact matches
+# it also rounds the time to 1 minute and takes the mean of the date, temp, depth, and salinity
+dep_con_data <- inner_join(depdata,condata) %>% # joins the two and omits the ones that dont match
+  select(!date) %>% # this removes the original date column
+  mutate(timebyminute = round_date(dateandtime, "1 minute")) %>% # this rounds by the minute
+  group_by(timebyminute) %>% # grouping variable is time
+  summarise_at(vars(c("dateandtime","TempInSitu","Depth","SalinityInSitu_1pCal")), list(mean = mean))
+view(dep_con_data)
+```
 
 
-## Creating functions  
+## rmarkdown  
+### main  
 
+from week_6  
+YAML - yet another markdown language  
+___
+yaml
+___
+includes metadata, style, and type, and output  
+minimal need is title and output  
+output: html_doc:
+toc: TRUE
+toc_float:TRUE  
+theme: darkly  
+install tinytex for better PDF documents  
+Headers #-####### 1-6  
+**bold** two astricks  
+*italics* one astick  
+new line is two spaces at end  
+list is with "-" to create asterisks for 1. for number list  
+1.  
+1.   
+1.  
+images = ! 
+![image name]  
+(image link)  
+link =   
+[link name]  
+(link)  
+cmd+option+I to insert chunk  
+format changes go inside the curly brackets 
+spaces matter 
+problems in yaml are usually with spacing
+google rmd formats to see lots of different formats
+
+### chunk options  
+
+**include**=false - dont want to show code or results  
+**echo** = false - shows results but not code  
+**message** = false - prevents msgs generated by code    
+**warning** = false prevents warnings from code   
+**fig.cap** = "jflj;dj" - adds caption  
+**eval** = false prevents code from beinf run    
+ global options call **knitr::opts_chunks$set** in code chunk within r setup box
+
+#### figure options  
+**goes in the 4 curley brackets**  
+change size  
+change resolution  
+change "device" (i.e. is it png, pdf, etc.)  
+save to specific folder  
+**out** for output and **fig** for figure  
+
+**out.width**="70%" (makes it 70% of the width) -->  
+**fig.width**=3 (makes the width 3 inches) -->  
+**fig.height**t=4 (makes the width 4 inches) -->  
+**fig.asp**=1.2 (changes the aspect ratio to 1.2) -->  
+**fig.align**="center" -->  
+**fig.path** in the the top so apply to whole doc but cant use here
+r label,  
+**fig path** cant use here function :( - where to put your figures when saved   
+have to change label names for each one or it will keep saving over  
+echo hides code
+**{r label, option1=value}** to name your code chunk  
+
+### kable tables  
+library(kableExtra)  
+
+**+kbl()** to make it a kable table   
+%>% kable_classic()  
+%>% row_spec(2, bold - T, color = "white", background = "red")  
+%>% kable_styling(full_width = FALSE) - to not make full width of page  
+
+## Maps  
+from week_7  
+[link to hack to use link and see like html](raw.githack.com)
+ggmaps uses google maps
+
+**sf** (This is for the serious GIS people. If you want to do actual spatial analyses this is the package to use)
+**ggmap** (Uses the google maps API to make maps. Really easy to use, but requires a credit card for the API...)
+**tmap** (static and interactive maps)
+**leaflet** (interactive html maps)
+
+map_data("location") is the function used to pull out whatever base layer that you want.
+
+
+
+long is longitude. Things to the west of the prime meridian are negative.
+
+lat is latitude.
+
+order. This just shows in which order ggplot should “connect the dots”
+
+region and subregion tell what region or subregion a set of points surrounds.
+
+**group = group** This is very important! ggplot2’s functions can take a group argument which controls (amongst other things) whether adjacent points should be connected by lines. If they are in the same group, then they get connected, but if they are in different groups then they don’t. Essentially, having to points in different groups means that ggplot “lifts the pen” when going between them.  
+
+```{r eval=FALSE, include=TRUE}
 library(tidyverse)
-1. set up skeleton
-2. name function - easy
-3. enter arguments
-4. enter return
-5. add your defaults
-great for making a function that includes my style
-library(PNWColors)
-**tip** can put all in my functions in one script and write code to run that script
-** curly curly {{}}** tells r that this color is associated with a dat frame and not floating vector
+library(here)
+library(maps)
+library(mapdata)
+library(mapproj)
+```
+
+
+
+### get data for the entire world
+world<-map_data("world")
+head(world)
+
+for usa map outline, lat and longs for outline
+
+### get data for the USA
+
+usa<-map_data("usa")
+head(usa)
+ country italy
+ 
+### get data for italy
+italy<-map_data("italy")
+head(italy)
+
+### get data for states
+states<-map_data("state")
+head(states)
+tail(states)
+
+group column tells you whne the pen is lifted when you are drawing
+
+### **remember to put group = group**
+
+### Mercator map
+
+```{r eval=FALSE, include=TRUE}
+ggplot()+
+  geom_polygon(data = world, aes(x = long, y = lat, group = group,
+                                 fill = region),
+               color = "yellow") +
+  guides(fill = FALSE) +
+  theme_minimal() +
+  theme(panel.background = element_rect(fill = "lightblue")) +
+    coord_map(projection = "mercator", # mercator typical projection
+            xlim = c(-180,180)) # add the limits to widen the map
+
+```
+ 
+ if you forget group = group looks like this
+```{r eval=FALSE, include=TRUE}
+ggplot()+
+  geom_polygon(data = world, aes(x = long, y = lat))
+
+```
+ 
+### Sinasoidal map
+ 
+```{r eval=FALSE, include=TRUE}
+ggplot()+
+  geom_polygon(data = world, 
+               aes(x = long,
+                   y = lat,
+                   group = group, 
+                   fill = region),
+               color = "black")+
+  theme_minimal()+
+  guides(fill = FALSE)+
+  theme(panel.background = element_rect(fill = "lightblue"))+
+  coord_map(projection = "sinusoidal",
+            xlim = c(-180,180))
+```
+### Map of California
+ 
+```{r eval=FALSE, include=TRUE}
+states %>% 
+  filter(region == "california") %>% 
+  ggplot()+
+  geom_polygon(aes(x = long,
+               y = lat,
+               group = group,
+               fill = region))+
+  coord_map()+
+  theme_void() # deletes the background
+calimap
+head(counties)[1:3,] 
+```
+  maps including county data
+ 
+### get county data
+counties <-map_data("county")
+```{r eval=FALSE, include=TRUE}
+
+
+CApop_county <- popdata %>% 
+  select("subregion" = County, Population) %>% 
+  inner_join(counties) %>% 
+  filter(region == "california") 
+
+  ggplot()+
+  geom_polygon(data = CApop_county,
+               aes(x = long,
+                   y = lat,
+                   fill = Population, 
+                   group = group))+
+  coord_map()+
+    scale_fill_gradient(trans = "log10")+ # log 10 transforming the fill gradient
+  theme_void()
+
+```
+
+### ggmap 
+Oahu <- get_map("Oahu)  
+ggmap(Oahu)
+WP<-data.frame(lon = -157.7621, lat = 21.27427) # coordinates for Wailupe
+**Get base layer**  
+Map1<-get_map(WP)
+**plot it**  
+ggmap(Map1)
+**zoom in**
+Map1<-get_map(WP,zoom = 17)
+ggmap(Map1)  
+**change map type**  
+Map1<-get_map(WP,zoom = 17, maptype = "satellite")
+ggmap(Map1)  
+**change maptype to watercolor**  
+Map1<-get_map(WP,zoom = 17, maptype = "watercolor")
+ggmap(Map1)  
+**add base layer to any plot**  
+Map1<-get_map(WP,zoom = 17, maptype = "satellite") 
+ggmap(Map1)+
+  geom_point(data = ChemData,
+             aes(x = Long, y = Lat, color = Salinity),
+             size = 4) +
+  scale_color_viridis_c()  
+**add a scalebar**  
+```{r, message=FALSE}
+library(ggmap)
+library(tidyverse)
+library(here)
+library(ggsn)
+ChemData<-read_csv(here("Week_7","data7","chemicaldata_maunalua.csv"))
+
+WP<-data.frame(lon = -157.7621, lat = 21.27427)
+#Map1<-get_map(WP)
+Map1<-get_map(WP,zoom = 17, maptype = "satellite") 
+ggmap(Map1)+
+  geom_point(data = ChemData, 
+             aes(x = Long, y = Lat, color = Salinity), 
+             size = 4) + 
+  scale_color_viridis_c()+
+  scalebar( x.min = -157.766, x.max = -157.758,
+           y.min = 21.2715, y.max = 21.2785,
+            dist = 250, dist_unit = "m", model = "WGS84", 
+            transform = TRUE, st.color = "white",
+            box.fill = c("yellow", "white"))
+```
+### geocode  
+Use geocode() to get exact locations that you can then use in the maps.
+
+geocode("the white house")  
+geocode("California State University, Northridge")  
+
+## Advanced plotting
+
+### patchwork
+
 ```{r}
+library(patchwork)
+library(ggplot2)
+library(palmerpenguins)
+# plot 1
+p1 <- penguins %>% 
+    ggplot(aes(x = body_mass_g, 
+             y = bill_length_mm, 
+             color = species))+
+  geom_point()
+
+# plot 2
+p2<-penguins %>%
+  ggplot(aes(x = sex, 
+             y = body_mass_g, 
+             color = species))+
+  geom_jitter(width = 0.2)
+
+# adding plots 1 and 2 
+p1 + p2 +
+  plot_layout(guides = 'collect')+
+  plot_annotation(tag_levels = 'A')
+
+p1/p2 +
+  plot_layout(guides = 'collect')+
+  plot_annotation(tag_levels = 'A')
+```
+
+
+### ggrepel  
+makes the data points repel  
+label gives box  
+text gives no box  
+
+```{r}
+library(ggrepel)
+library(ggplot2)
+# repels text
+ggplot(mtcars, aes(x = wt, 
+                   y = mpg, 
+                   label = rownames(mtcars))) +
+  geom_text_repel() + # repel them
+  geom_point(color = 'red')
+# repels labels with box around
+ggplot(mtcars, aes(x = wt, 
+                   y = mpg, 
+                   label = rownames(mtcars))) +
+  geom_label_repel() + # repel them 
+  geom_point(color = 'red')
+
+```
+
+### gganimate
+state_length is pause  
+transition_length is   
+curly bracket means take me out of quotes
+```{r}
+library(gganimate)
+library(palmerpenguins)
+library(ggplot2)
+
+anim <- penguins %>%
+ggplot(aes(x = body_mass_g, 
+            y = bill_depth_mm, 
+            color = species)) +
+  geom_point() +
+  transition_states(
+    year, # what we are animating by
+    transition_length = 2,
+    state_length = 1
+  ) +
+  ease_aes("sine-in-out") + # or 'bounce-in-out'
+  ggtitle('Year: {closest_state}') # no plus!!!
+animate(anim, height = 300, width = 400, nframes = 20)
+
+```
+to save an annimation add:
+```{r, eval=FALSE, include=TRUE}
+ anim_save(here("week_8","output8","mypengiungif.gif"))
+           # animate(penguins, renderer = gifski_renderer()))
+
+```
+### magick
+to add images to your graphs  
+- read_in image  
+- save plot as image  
+- make composite image  
+
+read in image  
+```{r}
+library(palmerpenguins)
+library(magick)
+library(here)
+library(ggplot2)
+penguin<-image_read("https://pngimg.com/uploads/penguin/pinguin_PNG9.png")
+penguinsmaller <- image_scale(penguin, "200")
+penguinsmaller
+```
+
+Save plot as picture
+
+```{r}
+penguins %>%
+ggplot(aes(x = body_mass_g, 
+            y = bill_depth_mm, 
+            color = species)) +
+  geom_point() 
+  ggsave(here("week_8", "output8", "penguinplot.png"))
+```
+
+make a composite plot
+
+```{r}
+penplot<-image_read(here("week_8","output8","penguinplot.png"))
+out <- image_composite(penplot, penguin, offset = "+70+30")
+outsmaller <- image_scale(out, "500") # to make smaller for printing
+outsmaller
+```
+
+can add a gif also 
+```{r}
+# Read in a penguin gif
+pengif<-image_read("https://media3.giphy.com/media/H4uE6w9G1uK4M/giphy.gif")
+outgif <- image_composite(penplot, pengif, gravity = "center")
+animation <- image_animate(outgif, fps = 10, optimize = TRUE)
+# animation
+#only for printing purpose
+smalleranimation <- image_scale(animation, "500")
+smalleranimation
+```
+
+
+## Creating functions   
+
+library(tidyverse)  
+1. set up skeleton  
+2. name function - easy  
+3. enter arguments  
+4. enter return  
+5. add your defaults  
+great for making a function that includes my style  
+library(PNWColors)  
+**tip** can put all in my functions in one script and write code to run that script  
+** curly curly {{}}** tells r that this color is associated with a dat frame and not floating vector
+
+
+
+```{r, message=FALSE}
 library(tidyverse)
 F_to_C <- function(temp_F){
   temp_C <- (temp_F-32) * 5 / 9
@@ -304,36 +985,12 @@ test it
 F_to_C(32)
 ```
 
-```{r}
-# install.packages("PNWColors")
+
+add defaults
+```{r, warning=FALSE, message=FALSE}
 library(palmerpenguins)
 library(PNWColors)
-pal <- pnw_palette("Lake",3,type = "discrete") # exclusive to color palette
-
-ggplot(penguins, aes(x = body_mass_g,
-                     y = bill_length_mm,
-                     color = island))+
-  geom_point()+
-  geom_smooth(method = "lm")+ # add a linear model
-  scale_color_manual("Island", values = pal)+
-  theme_bw()
-```
-
-
-```{r}
-myplot<-function(data, x, y){
-pal<-pnw_palette("Lake",3, type = "discrete") # my color palette 
-ggplot(data, aes(x = {{x}}, y = {{y}} , color = island))+
-  geom_point()+
-  geom_smooth(method = "lm")+ # add a linear model
-  scale_color_manual("Island", values=pal)+   # use pretty colors and change the legend title
-  theme_bw()
-}
-
-myplot(data = penguins, x = body_mass_g, y = bill_length_mm)
-```
-### add defaults
-```{r}
+library(tidyverse)
 myplot<-function(data = penguins, x, y){ # made a default data
 pal<-pnw_palette("Lake",3, type = "discrete") # my color palette 
 ggplot(data, aes(x = {{x}}, y = {{y}} , color = island))+
@@ -342,9 +999,10 @@ ggplot(data, aes(x = {{x}}, y = {{y}} , color = island))+
   scale_color_manual("Island", values=pal)+   # use pretty colors and change the legend title
   theme_bw()
 }
+myplot(data = penguins, x = body_mass_g, y = bill_length_mm)
 ```
 
-### add an if-else statement
+add an if-else statement
 ```{r}
 a <- 4
 b <- 5
@@ -362,7 +1020,7 @@ f
 
 plotting
 
-```{r}
+```{r, warning=FALSE}
 myplot<-function(data = penguins, x, y, lines=TRUE ){ # add new argument for lines
 pal<-pnw_palette("Lake",3, type = "discrete") # my color palette 
 if(lines==TRUE){
@@ -386,24 +1044,31 @@ myplot(x = body_mass_g, y = flipper_length_mm, lines = FALSE)
 
 
 
-## Awesome r packages
+## Awesome r packages  
+### give yourself praise  
 library(praise)  
 praise()  
+
+### dad jokes  
 
 library(dadjoke)  
 dadjoke()  
 
-animals that talk to you
-library(cowsay)
-I want a shark to say hello
-say("hello", by = "shark")
-say(by ="random")
+### animals that talk  
+animals that talk to you  
+library(cowsay)  
+I want a shark to say hello  
+say("hello", by = "shark")  
+say(by ="random")  
 
+### catterplot  
 catterplot uses cats in your graphs
 
+### make computer make beeping  
 library(beepr)
 beep(5)
 
+### make memes  
 devtools::install_github("sctyner/memer")
 library(memer)
 meme_list()
@@ -412,6 +1077,34 @@ meme_get("NoneOfMyBusiness") %>%
   meme_text_top("I don't always like coding", size = 28) %>% 
   meme_text_bottom("But when I do\nIt's always today's totally awesome R package", size = 18)
   
-library(fortunes)
+### get fortunes  
+library(fortunes)  
 fortune()  
+
+### to put sitting Bernie sanders on graph
+library(ggbernie) +  
+geom_bernie(aes(x = Salinity, y = NN), bernie = "sitting")  
+
+### ggdogs  
+remotes::install_github("R-CoderDotCom/ggdogs@main")  
+library(ggdogs)  
+ggplot(mtcars) +  
+  geom_dog(aes(mpg, wt), dog = "pug", size = 5)  
+  
+### emojifont  
+to use emjis on graphs  
+install.packages("emojifont")
+
+library(emojifont)
+search_emoji('smile')
+
+ggplot() + 
+  geom_emoji('smile_cat', 
+             x=1:5, y=1:5, 
+             size=10)
+[emojifont link info](https://cran.r-project.org/web/packages/emojifont/vignettes/emojifont.html)  
+
+
+
+
 

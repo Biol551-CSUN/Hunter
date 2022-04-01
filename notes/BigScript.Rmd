@@ -1,0 +1,113 @@
+---
+title: "R Notebook"
+output:
+  html_document:
+    toc: yes
+    df_print: paged
+  html_notebook:
+    toc: yes
+---
+
+
+```{r setup, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## gganimate
+
+
+```{r, message=FALSE,results='hide'}
+library(patchwork)
+library(ggrepel)
+library(gganimate)
+library(magick)
+library(ggplot2)
+library(here)
+library(palmerpenguins)
+```
+
+
+```{r}
+p1 <- penguins %>% 
+    ggplot(aes(x = body_mass_g, 
+             y = bill_length_mm, 
+             color = species))+
+  geom_point()
+p1
+```
+
+
+
+
+```{r}
+p2<-penguins %>%
+  ggplot(aes(x = sex, 
+             y = body_mass_g, 
+             color = species))+
+  geom_jitter(width = 0.2)
+p2
+```
+
+
+
+
+
+```{r}
+p1 + p2 +
+  plot_layout(guides = 'collect')+
+  plot_annotation(tag_levels = 'A')
+```
+```{r}
+p1/p2 +
+  plot_layout(guides = 'collect')+
+  plot_annotation(tag_levels = 'A')
+```
+
+
+
+```{r}
+ggplot(mtcars, aes(x = wt, 
+                   y = mpg, 
+                   label = rownames(mtcars))) +
+  geom_text() + # creates a text label
+  geom_point(color = 'red')
+
+
+
+```
+
+
+
+
+```{r}
+ggplot(mtcars, aes(x = wt, 
+                   y = mpg, 
+                   label = rownames(mtcars))) +
+  geom_text_repel(max.overlaps = Inf) + # repel them
+  geom_point(color = 'red')
+
+
+```
+
+```{r}
+
+
+ggplot(mtcars, aes(x = wt, 
+                   y = mpg, 
+                   label = rownames(mtcars))) +
+  geom_label_repel(max.overlaps = Inf) + # repel them
+  labs(title = )+
+  geom_point(color = 'red')
+# label gives box and text gives no box
+
+```
+
+
+
+
+### Magick 
+```{r}
+penguin<-image_read("https://pngimg.com/uploads/penguin/pinguin_PNG9.png")
+penguin
+```
