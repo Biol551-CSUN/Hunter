@@ -47,46 +47,40 @@ _It will hold the data, scripts, and outputs that I gather, learn, and create ea
    [Output](https://github.com/Biol551-CSUN/Hunter/tree/main/week_6/output6)  
    
 
-  ### [Week 7]()  
-  _This week focuses on....._  
- >  [Data]()  
-   [Scripts]()  
-   [Output]()  
+  ### [Week 7](https://github.com/Biol551-CSUN/Hunter/tree/main/week_7)  
+  _This week focuses on making maps_  
+ >  [Data](https://github.com/Biol551-CSUN/Hunter/tree/main/week_7/data7)  
+   [Scripts](https://github.com/Biol551-CSUN/Hunter/tree/main/week_7/scripts7)  
+     
    
 
 
-  ### [Week 8]()  
-  _This week focuses on....._  
- >  [Data]()  
-   [Scripts]()  
-   [Output]()  
-   
-
-  ### [Week 9]()  
-  _This week focuses on....._  
- >  [Data]()  
-   [Scripts]()  
-   [Output]()  
+  ### [Week 8](https://github.com/Biol551-CSUN/Hunter/tree/main/week_8)  
+  _This week focuses on advanced plotting and how to write a function_  
+ >  [Data](https://github.com/Biol551-CSUN/Hunter/tree/main/week_8/data8)  
+   [Scripts](https://github.com/Biol551-CSUN/Hunter/tree/main/week_8/scripts8)  
+   [Output](https://github.com/Biol551-CSUN/Hunter/tree/main/week_8/output8)  
    
 
 
-  ### [Week 10]()  
-   _This week focuses on....._  
-  > [Data]()  
-   [Scripts]()  
-   [Output]()  
+
+  ### [Week 10](https://github.com/Biol551-CSUN/Hunter/tree/main/week_10)  
+   _This week focuses on making a reprex, shiny apps, and how to get help_  
+  > [Test app](https://github.com/Biol551-CSUN/Hunter/tree/main/week_10/testapp/app.r)  
+   [Scripts](https://github.com/Biol551-CSUN/Hunter/tree/main/week_10/scripts10)  
+    
    
    
-  ### [Group Project]()  
-   _This week focuses on....._  
- >  [Data]()  
-   [Scripts]()  
-   [Output]()  
+  ### [Rayshader / Group 1 Project](https://github.com/Biol551-CSUN/Group_1)  
+   _This week focuses on our group project about Rayshader_  
+ >  [Data](https://github.com/Biol551-CSUN/Group_1/tree/main/Data)  
+   [Scripts](https://github.com/Biol551-CSUN/Group_1/tree/main/Scripts)  
+   [Output](https://github.com/Biol551-CSUN/Group_1/tree/main/Output)  
    
 
 
   ### [Week 12]()  
-   _This week focuses on....._  
+   _This week focuses on working with words and factors_  
  >  [Data]()  
    [Scripts]()  
    [Output]()  
@@ -94,7 +88,7 @@ _It will hold the data, scripts, and outputs that I gather, learn, and create ea
 
 
   ### [Week 13]()  
-   _This week focuses on....._  
+   _This week focuses on Iterative data and models_  
  >  [Data]()  
    [Scripts]()  
    [Output]()  
@@ -102,7 +96,7 @@ _It will hold the data, scripts, and outputs that I gather, learn, and create ea
 
 
   ### [Week 14]()  
-   _This week focuses on....._  
+   _This week focuses on finishing models_  
  >  [Data]()  
    [Scripts]()  
    [Output]()  
