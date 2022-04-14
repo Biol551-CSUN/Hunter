@@ -63,6 +63,7 @@ ggmap(Map1)
 ```{r}
 Map1<-get_map(WP,zoom = 17)
 ggmap(Map1)
+
 ```
 
 ## change map type

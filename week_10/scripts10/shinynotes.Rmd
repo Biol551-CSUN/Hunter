@@ -1,0 +1,33 @@
+---
+title: "shiny"
+author: "Jessica Hunter"
+date: "4/7/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+#install.packages("shiny")
+```
+
+## Including Plots
+everyputput is output$
+eg. output$hist<- code  
+spell exact same way as in function  
+2. code needs to say render a plot with function renderPlot({})  
+goes in order so if plot on top then plot wil be on top in app
+first create space in user interface ui  
+in ui put commas but in output no commas but space  
+create something reactive() so that can ineract, goes in server  
+data has open and closed () because it's a function because it changes  
+
+

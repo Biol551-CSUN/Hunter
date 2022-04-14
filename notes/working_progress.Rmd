@@ -95,7 +95,7 @@ c2s<- function(input) {
 
 
 ```{r}
-scientificname <- function(input){
+scientificname <- function(input, data = treenames){
   if {{input}} %in% c("common", "othercommon"){
   print(testvector$scientific)
   }

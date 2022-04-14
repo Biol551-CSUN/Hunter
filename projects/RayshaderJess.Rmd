@@ -1,0 +1,198 @@
+---
+title: "rayshader"
+author: "Jessica Hunter"
+date: "4/11/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+ libraraies
+ 
+```{r}
+# install.packages("rayshader")
+# install.packages("crosstalk")
+# install.packages("manipulateWidget")
+library(rayshader)
+
+library(here)
+library(sp)
+library(raster)
+library(rgdal)
+library(tidyverse)
+```
+ 
+ 
+ 
+```{r}
+#Here, I load a map with the raster package.
+loadzip = tempfile() 
+download.file("https://tylermw.com/data/dem_01.tif.zip", loadzip)
+#install.packages("rgdal")
+#localtif = raster::raster(unzip(loadzip, "dem_01.tif"))
+#inunlink(loadzip)
+
+#And convert it to a matrix:
+elmat = raster_to_matrix(here("projects", "dem_01.tif"))
+
+#We use another one of rayshader's built-in textures:
+elmat %>%
+  sphere_shade(texture = "desert") %>%
+  plot_map()
+```
+ 
+ 
+ 
+```{r}
+mtplot = ggplot(mtcars) + 
+  geom_point(aes(x = mpg, y = disp, color = cyl)) + 
+  scale_color_continuous(limits = c(0, 8))
+```
+
+
+```{r}
+#par(mfrow = c(1, 2))
+plot_gg(mtplot, width = 3.5, raytrace = FALSE, preview = TRUE)
+
+plot_gg(mtplot, width = 3.5, multicore = TRUE, windowsize = c(800, 800), 
+        zoom = 0.1, phi = 35, theta = 30, sunangle = 225, soliddepth = -100)
+Sys.sleep(0.2)
+render_snapshot(clear = TRUE)
+```
+ 
+ 
+```{r}
+popdata<-read_csv(here("Data","CApopdata.csv"))
+
+counties <-map_data("county")
+
+CApop_county <- popdata %>% 
+  select("subregion" = County, Population) %>% 
+  inner_join(counties) %>% 
+  filter(region == "california")
+        ggplot()+
+  geom_polygon(data = CApop_county,
+               aes(x = long,
+                   y = lat,
+                   fill = Population, 
+                   group = group))+
+  coord_map()+
+    scale_fill_gradient(trans = "log10")+ # log 10 transforming the fill gradient
+  theme_void()
+
+plot_gg(CApop_county,
+        width = 4,
+        height = 4,
+        scale = 300,
+        multicore = TRUE)
+
+Sys.sleep(1.0)
+render_snapshot(clear=TRUE)
+
+```
+ 
+ 
+```{r}
+hillshade[,,1] = as.vector(hillshade[,,1]) * scales::rescale(shadowmap,c(max_darken,1))
+```
+ 
+ hexabin
+```{r}
+a = data.frame(x = rnorm(20000, 10, 1.9), y = rnorm(20000, 10, 1.2))
+b = data.frame(x = rnorm(20000, 14.5, 1.9), y = rnorm(20000, 14.5, 1.9))
+c = data.frame(x = rnorm(20000, 9.5, 1.9), y = rnorm(20000, 15.5, 1.9))
+data = rbind(a, b, c)
+
+#Lines
+pp = ggplot(data, aes(x = x, y = y)) +
+  geom_hex(bins = 20, size = 0.5, color = "black") +
+  scale_fill_viridis_c(option = "C")
+
+par(mfrow = c(1, 2))
+plot_gg(pp, width = 5, height = 4, scale = 300, raytrace = FALSE, preview = TRUE)
+plot_gg(pp, width = 5, height = 4, scale = 300, multicore = TRUE, windowsize = c(1000, 800))
+render_camera(fov = 70, zoom = 0.5, theta = 130, phi = 35)
+Sys.sleep(0.2)
+render_snapshot(clear = TRUE)
+
+```
+
+
+
+```{r}
+mtplot = ggplot(mtcars) + 
+  geom_point(aes(x = mpg, y = disp, color = cyl)) + 
+  scale_color_continuous(limits = c(0, 8))
+
+plot_gg(mtplot, width = 3.5, multicore = TRUE, windowsize = c(800, 800), 
+        zoom = 0.1, phi = 35, theta = 30, sunangle = 225, soliddepth = -100)
+Sys.sleep(0.2)
+render_snapshot(clear = TRUE)
+```
+mtplot = ggplot(mtcars) + 
+  geom_point(aes(x = mpg, y = disp, color = cyl)) + 
+  scale_color_continuous(limits = c(0, 8))
+
+plot_gg(mtplot, width = 3.5, multicore = TRUE, windowsize = c(800, 800), 
+        zoom = 0.1, phi = 35, theta = 30, sunangle = 225, soliddepth = -100)
+Sys.sleep(0.2)
+render_snapshot(clear = TRUE)
+ 
+ 
+ 
+```{r}
+everest<- raster_to_matrix(here("projects", "output_NASADEM.tif"))
+
+everest %>%
+    sphere_shade(zscale = 10, texture = "imhof1") %>%
+    plot_3d(everest, zscale = 50, fov = 70, theta = 270, phi = 30, 
+            windowsize = c(1000, 800), zoom = 0.6,  
+            water = TRUE, waterdepth = 0, wateralpha = 0.5, watercolor = "#233aa1",
+            waterlinecolor = "white", waterlinealpha = 0.5)
+Sys.sleep(0.2)
+render_highquality(lightdirection = c(-45,45), lightaltitude  = 30, clamp_value = 10, 
+                   samples = 256, camera_lookat= c(0,-50,0),
+                   ground_material = diffuse(color="grey50",checkercolor = "grey20", checkerperiod = 100),
+                   clear = TRUE)
+```
+ 
+ 
+```{r}
+sfv<- raster_to_matrix(here("Data", "sanfernandovalley.tif"))
+
+sfv %>%
+    sphere_shade(zscale = 10, texture = "imhof1") %>%
+        add_water(detect_water(sfv, min_area = 400),color = "lightblue") %>%
+    plot_3d(sfv, zscale = 50, fov = 70, theta = 270, phi = 30, 
+            windowsize = c(1000, 800), zoom = 0.6,  
+            water = TRUE, waterdepth = 0, wateralpha = 0.5, watercolor = "#233aa1",
+            waterlinecolor = "white", waterlinealpha = 0.5)
+
+everest %>%
+    sphere_shade(zscale = 10, texture = "imhof1") %>%
+    plot_3d(everest, zscale = 50, fov = 70, theta = 270, phi = 30, 
+            windowsize = c(1000, 800), zoom = 0.6,  
+            water = TRUE, waterdepth = 0, wateralpha = 0.5, watercolor = "#233aa1",
+            waterlinecolor = "white", waterlinealpha = 0.5)
+```
+ 
+ 
+```{r}
+if(interactive()){
+  filename_movie = tempfile()
+sfv %>%
+    sphere_shade(zscale = 10, texture = "imhof1") %>%
+        add_water(detect_water(sfv, min_area = 400),color = "lightblue") %>%
+    plot_3d(sfv, zscale = 50, fov = 70, theta = 270, phi = 30)
+render_movie(filename = filename_movie,
+             frames = 20,
+             fps = 4, 
+             title_text = "San Fernando Valley")
+rgl::rgl.close()
+
+}
+#install.packages("av")
+```
+ 
+ 

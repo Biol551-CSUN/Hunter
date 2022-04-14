@@ -1,0 +1,14 @@
+---
+title: "Group presentations"
+author: "Jessica Hunter"
+date: "4/14/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Data Explorer package
+plot_density
+plot_qq

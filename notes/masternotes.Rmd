@@ -126,6 +126,22 @@ ggplot default changes
 5. remove unnecessary gridlines  
 6. remove abbreviations  
 
+### how to ask for help
+type in the function and library package name both in search with question
+don't use ggplot and tidyverse, bc gplot is in tidyverse
+1. make sure spelled right  
+2, make sure use ls() which lists everything and if not there then not created  
+3. warning ignoring parameter"___" because you spelled it wrong    
+4. if error in summary them might be a na or character  
+5. parenthesis all there, did you store or call, 
+6. go to [stackoverflow](https://stackoverflow.com/) and copy and paste code  
+7. [rstudio community](https://community.rstudio.com/)  
+"#rstats" on twitter - no seriously, create an account. Some to follow right away for maximum R learning, commentary and community: @dataandme, @hadleywickham, @drob, @RLadiesGlobal, @WeAreRLadies, @R4DScommunity, @allison_horst, @R_LGBTQ, @JennyBryan, @juliasilge, @noamross, @kara_woo, @thomas_mock, @juliesquid, @cedsherer @ellis_hughes @geokaramanis
+8. how to session for stackoverflow post - go to add in then render reprex and then current file or clipboard
+ and github/stack overfow, and check append session and it goes to clipboard to paste into stackoverflow for help
+
+
+
 ## Libraries  
 **ggplot()** data visualization  
 **library(palmerpenguins)** data on penguins for practice  
@@ -143,7 +159,9 @@ library(patchwork) - bring plots together
 library(ggrepel) - repels labels on plot  
 library(gganimate) - adds animations  
 library(magick) - photo processing  
-
+library(reprex) - examples of reproductible data; works through addin  
+library(datapasta) - copy and pastse stiff in a tibble, works through add in  
+library(styler)- copy and paste in sty;e - apart of adatpasta
 
 ## Helpful Links
 
@@ -196,6 +214,22 @@ library(magick) - photo processing
 [setting up ggmaps](https://www.findingyourway.io/blog/2018/12/05/2018-12-05-using-ggmap-after-july-2018/)  
 
 
+
+### getting Help links
+[r4ds on slack](https://t.co/Tdv5GyDQym?amp=1)
+[getting help ch in r cookbook](https://rc2e.com/gettingstarted)  
+look up tidyverse help stuff in [tivdyverse.com](https://www.tidyverse.org/)  
+[rdocumentation help](https://www.rdocumentation.org/)  
+[link to rstudio community](https://community.rstudio.com/)  
+[to find out which function or package to use](https://cran.r-project.org/web/views/)  
+r specific search tool like google for r [rdocumentaton.org](https://rdocumentation.org/) or [rseek](https://rseek.org/)  
+go to [stackoverflow](https://stackoverflow.com/) and copy and paste code  
+[rstudio community](https://community.rstudio.com/)  
+[ch 1 in r cookbook](https://rc2e.com/gettingstarted)  
+[dos and don'ts](https://reprex.tidyverse.org/articles/reprex-dos-and-donts.html)  
+
+
+
 ## ggplot 
 
 ### ggplotnotes 
@@ -213,7 +247,11 @@ spaces out so points not on top of each other
 **histograms or density plots** - show values within a group  
 **more variables** - map w/ colors size?  
 Marginal plot
-
+*within ggplot don't use pipe, only use +*
+before geomXXX==== do the dataframe and x and y aesthetic within ggplot function  
+if inside then associted dataframe but outside of aes() then you specified value
+can not add a pipe with ggmaps, and ggmaps has it's own dataframe
+aes(x=, y=), color ="red" - make sure outside of aes if not a column or variable
 
 ### main  
 from week_3  
@@ -235,7 +273,7 @@ color = "blah"
 shape = "shape label"   
 caption = "write caption here"   
 )+  
-scale_color_viridisd()+    
+scale_color_viridis_d()+    
 **+**facet_grid(row~columns)  - 2D  
 **+**facet_wrap(~colums, ncol = 2) - 1D  
 **+**guides(color = FALSE)  

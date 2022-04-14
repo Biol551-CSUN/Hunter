@@ -24,7 +24,6 @@ library(here)
 library(maps)
 library(mapproj)
 library(mapdata)
-library(ggplot2)
 library(ggmap)
 ```
 
@@ -34,6 +33,9 @@ Data from Tidy Tuesday January 28, 2022
 sf_trees <- read_csv(here("week_8","data8", "sf_trees.csv"))
 
 # sf_trees <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-28/sf_trees.csv')
+
+sf_trees
+
 ```
 
 ## Functions
@@ -132,23 +134,37 @@ scientific2common<- function(samplename, data=treenames){
 
 ### Function where you enter scientific tree name and plots on maps
 ```{r}
+
+geocode("San Francisco County")
+sfdataframe<-data.frame(lon= -122.4194, lat= 37.77493)
+gmap1<-get_map(sfdataframe, zoom = 13, maptype = "satellite")
+
+
 sftreeplot<- function(samplename,data=sf_trees_clean){
+  
+  sfdataframe<-data.frame(lon= -122.4194, lat= 37.77493)
+  gmap1<-ggmap::get_map(sfdataframe, zoom = 13, maptype = "satellite")
+
   if (samplename %in% sf_trees_clean$scientific){
-    abcd<-filter(sf_trees_clean, scientific=={{samplename}}) %>% 
-      ggplot()+
-  geom_point(aes(x=longitude,y=latitude,
-                 color = scientific))+
-    geom_polygon(data = sanfran,
-                aes(y = lat,
-                    x = long,
-                    group = group,
-                    alpha = 9))+
-  coord_map(projection = "mercator",
-             ylim = c(37.69,37.825),
-             xlim = c(-122.5, -122.3))+
-  theme(legend.position = "none")+
-      guides(fill=FALSE)
-  abcd
+    abcd<-filter(sf_trees_clean, scientific=={{samplename}}) 
+    
+ plot1<- ggmap(gmap1) +
+  geom_point(data = abcd,
+             aes(x=longitude,y=latitude),
+                 color = "blue") 
+    
+    # geom_polygon(data = sanfran,
+    #             aes(y = lat,
+    #                 x = long,
+    #                 group = group,
+    #                 alpha = .2))+
+  # coord_map(projection = "mercator",
+  #            ylim = c(37.69,37.825),
+  #            xlim = c(-122.5, -122.3))+
+  # theme(legend.position = "none")+
+  #     guides(fill=FALSE,
+  #            scale="none")
+  plot1
   } else{
     print("error:Did you place in quotes?")
   }

@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Group 1 Project</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Diego, Manroop, and Jessica" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Group 1 Project
+## Rayshader Package
+### Diego, Manroop, and Jessica
+### (2022-04-14)
+
+---
+
+
+
+
+&lt;div style = "position:fixed; visibility: hidden"&gt;
+`$$\require{color}\definecolor{yellow}{rgb}{1, 0.8, 0.16078431372549}$$`
+`$$\require{color}\definecolor{orange}{rgb}{0.96078431372549, 0.525490196078431, 0.203921568627451}$$`
+`$$\require{color}\definecolor{green}{rgb}{0, 0.474509803921569, 0.396078431372549}$$`
+&lt;/div&gt;
+
+&lt;script type="text/x-mathjax-config"&gt;
+MathJax.Hub.Config({
+  TeX: {
+    Macros: {
+      yellow: ["{\\color{yellow}{#1}}", 1],
+      orange: ["{\\color{orange}{#1}}", 1],
+      green: ["{\\color{green}{#1}}", 1]
+    },
+    loader: {load: ['[tex]/color']},
+    tex: {packages: {'[+]': ['color']}}
+  }
+});
+&lt;/script&gt;
+
+&lt;style&gt;
+.yellow {color: #FFCC29;}
+.orange {color: #F58634;}
+.green {color: #007965;}
+&lt;/style&gt;
+
+
+
+
+
+---
+
+&lt;img src="presentationwithvideo_files/figure-html/unnamed-chunk-1-1.png" width="7720" /&gt;
+
+---
+
+## What is Rayshader?
+.pull-left[
+  
+It is a package that creates 3D maps in R from elevation data. 
+
+The name comes from using ray shades.  
+
+He wanted the 3D images to be reproducible and also work with ggplot so you don't have to learn a new language.
+
+The creator feels like all 3D isn't bad and 3D engages people.
+
+]
+
+.pull-right[
+
+Created by Tyler Morgan-Wall 
+
+
+&lt;img src="presentationwithvideo_files/figure-html/unnamed-chunk-2-1.png" width="267" /&gt;
+]
+---
+## Introduction
+
+Rayshader is a package used for 3D and 2D visualization. It’s functions can be used to create 3D and 2D maps and ggplots!  It does so through a series of overlays that when applied on top of each other form a 2D/3D map or plot. Rayrender (a sub-feature of rayshader) can also be used to rotate the maps and show your creations from all angles as well as render your creation. 
+---
+
+
+## Install Packages
+Install the latest version here:
+
+```r
+# To install the latest version from Github:
+# install.packages("devtools")
+#devtools::install_github("tylermorganwall/rayshader")
+```
+Or the CRAN version:
+
+```r
+#install.packages("rayshader")
+# install.packages("crosstalk")
+# install.packages("manipulateWidget")
+```
+
+You might also have to install Xquart software if you own a mac
+
+---
+## Load Libraries
+
+```r
+library(rayshader)# creates 3D maps using elevation data
+library(here) # for unbreakable file paths
+library(tidyverse) #tidys up data
+library(raster) # handles raster files
+```
+
+---
+
+## Where to get Topographic data
+.pull-left[
+[Shuttle Radar Topogragraphy Mission](https://dwtkns.com/srtm30m/)  
+
+This website gives tiles of data
+
+&lt;img src="presentationwithvideo_files/figure-html/unnamed-chunk-6-1.png" width="1719" /&gt;
+
+]
+
+.pull-right[
+[OpenTopography.org](https://portal.opentopography.org/datasets)  
+
+This website allows click and drag selection or typing in coordinates
+
+&lt;img src="presentationwithvideo_files/figure-html/unnamed-chunk-7-1.png" width="1749" /&gt;
+
+]
+---
+
+## Load Data
+
+"quakes" [sample data](https://portal.opentopography.org/datasets
+
+
+---
+## 3D plots
+
+Rayshader allows transformation of regular ggplot plots to 3D. Let's start by generating a plot form the "quakes" [sample data](https://portal.opentopography.org/datasets).
+
+.pull-left[
+
+```r
+data("quakes")
+
+quakes_sample &lt;- quakes[seq(1,1000,by = 100),]
+
+quakes_plot&lt;-ggplot(data = quakes_sample, aes(x = lat, y = long)) + 
+  geom_point(aes(size = mag, colour = mag)) +
+  guides(size = F) + 
+  labs(x = "Latitude", y = "Longitude") + 
+  scale_colour_viridis_b(option = "B") + 
+  scale_size_continuous(range = c(1,10))
+```
+]
+.pull-right[
+
+```r
+quakes_plot
+```
+
+![](presentationwithvideo_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
+]
+---
+
+The plot looks good by itself, but we can try to make a 3D version using rayshader's plot_gg() function.
+
+### Function plot_gg()
+
+This function is arguably the most important part of this package. The function works in conjunction with ggplot2 to take an object and through aesthetics/fill color the plot can be made into a 3D visualization. From now on, we will use render_snapshot() to take a screenshot after every step. 
+
+### Function render_snapshot()
+
+This function takes a snapshot of the current render view, and generates a current device plot.
+---
+Let's see the result on our "quakes" plot.
+.pull-left[
+
+```r
+plot_gg(quakes_plot,
+        width = 4,
+        height = 4,
+        scale = 300,
+        multicore = TRUE)
+
+Sys.sleep(1.0)
+```
+]
+.pull-right[
+
+```r
+render_snapshot(clear=TRUE)
+```
+
+![](presentationwithvideo_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
+
+]
+
+---
+## Topographic maps
+
+What rayshader is the most useful for, is creating stunning 3D topographic maps. Today we are going to render a map starting from an altitude raster. We are going to walk you through the process starting from a custom raster from The Santa Monica Mountains, that we previously prepared for the example.
+
+There are many sources were you can download rasters, depending on your needs, for example [this website](https://dwtkns.com/srtm30m/) contains worldwide altitude rasters with 30 meter resolution.
+
+We can import our raster as an object using the function raster().
+
+
+```r
+elevation &lt;- raster::raster(here("Data","section_SMM.tif"))
+```
+---
+
+
+Now that we have made sure our raster is loaded, let's make our 3d map!
+
+First, we will use raster_to_matrix() to convert the raster into a 3d point matrix manageable by rayshader. 
+
+### function raster_to_matrix()
+
+This function turns the raster file into a matrix file that’s easier to work with
+
+The function converts the the x and y data into a matrix and only keeps the elevation values. This creates a great surface plot
+
+
+```r
+samo &lt;- raster_to_matrix(elevation)
+```
+
+---
+Then we can make sure it works by plotting it with plot_map ().
+
+```r
+height_shade(raster_to_matrix(elevation)) %&gt;%
+  plot_map()
+```
+
+![](presentationwithvideo_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
+
+---
+Now that we have doublechecked that our raster is ready, let's create an object with the matrix.
+
+Now, we can render the terrain using **sphere_shade()**, and visualize it by piping it into the **plot_3d ()** function. An interactive pop-up window will open, where you can move around your render, and then you can take a snapshot using the **render_snapshot function()**.
+
+
+### Function sphere_shade()
+
+The sphere_shade() function has two main parts to it. This function acts to add texture to a map or hillshade through spherical mapping and color selection. This function also has a total of 7 preset palettes which can be used to add color to different aspects of the map.
+The presets include:
+ “Imhof1”
+ “Imhof2”
+ “Imhof3”
+ Imhof4“
+”desert“
+”Bw“
+”unicorn"
+---
+
+### Function plot_3d()
+This function creates a 3D plot but allows you to choose camera position and background colors/shadows.
+plot_3d() can be used interchangeably with plot_gg on ggplots but is more specifically used for forming 3D aspects on maps in maps specifically alongside making 3D it also provides texture and elevation matrix.
+
+### Function render_snapshot()
+This function displays the current snapshot or saves it in the current location if you give it a file name
+(clear=TRUE) clears the last image 
+
+
+---
+We will use the plot_3d function to render the 3D figure.
+.pull-left[
+
+```r
+samo %&gt;%
+  sphere_shade(texture = "imhof3") %&gt;% #texture makes reference to the color of the surface
+  plot_3d(samo,
+          zscale = 10,
+          fov = 0, #default field of view angle
+          theta = 50, #default rotation of the view
+          zoom = 0.75,
+          phi = 45, #default azimuth angle
+          windowsize = c(800, 600)) #size of the pop-up window in pixels
+
+Sys.sleep(1.0)
+```
+]
+.pull-right[
+
+```r
+render_snapshot(clear=TRUE)
+```
+
+![](presentationwithvideo_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
+
+]
+---
+
+Now we can try adding water to the sea surface, using the function add_water().
+
+### Functions detect_water() &amp; add_water()
+
+This function uses an algorithm to find wide flat areas to detect water. It can be adjusted to only include flat areas of a minimal area. detect_water() function uses a flood to fill algorithm to detect where bodies of water would be present. The add_water() can then be used in conjunction with detect_water() to fill this area the color of the fill can also be customized. The customization can be done via manually entering a color name. Alternatively the sphere_shade palette can be used to get a more accurate or matching hue. 
+
+---
+detect_water() and add_water()
+.pull-left[
+
+```r
+samo %&gt;%
+  sphere_shade(texture = "imhof3") %&gt;% 
+  add_water(detect_water(samo), color = "lightblue") %&gt;% #you can customize the color
+  plot_3d(samo,
+          zscale = 10,
+          fov = 0, 
+          theta = 50, 
+          zoom = 0.75,
+          phi = 45, 
+          windowsize = c(800, 600)) 
+Sys.sleep(1.0)
+```
+]
+.pull-right[
+
+```r
+render_snapshot(clear=TRUE)
+```
+
+![](presentationwithvideo_files/figure-html/unnamed-chunk-16-1.png)&lt;!-- --&gt;
+
+]
+---
+Now, we can add extra shadows in order for it to look more realistic. These will take a while to render.
+
+### Function add_shadow() and related
+
+This functions combines the functions height_shade() and lamb_shade() which is then scaled and applied to create shadows on the map.
+
+height_shade() is able to determine a color for each surface point through an elevation to color map ie. it color matches your surface to what seems to be most accurate.
+
+lamb_shade() is used to set up the direction in which light is hitting your map and in doing so it also creates the shadow based on the manner in which light is reflected on the map.
+---
+add_shadow()
+
+.pull-left[
+
+```r
+samo %&gt;%
+  sphere_shade(texture = "imhof3") %&gt;% 
+  add_water(detect_water(samo), color = "lightblue") %&gt;%
+  add_shadow(ray_shade(samo), 0.5) %&gt;% #generate fine-scale shades from sun
+  add_shadow(ambient_shade(samo), 0) %&gt;% #generate shades from atmospheric scattering
+  plot_3d(samo,
+          zscale = 10,
+          fov = 0, 
+          theta = 50, 
+          zoom = 0.75,
+          phi = 45, 
+          windowsize = c(800, 600)) 
+Sys.sleep(1.0)
+```
+]
+.pull-right[
+
+```r
+render_snapshot(clear=FALSE)
+```
+
+![](presentationwithvideo_files/figure-html/unnamed-chunk-18-1.png)&lt;!-- --&gt;
+
+]
+---
+## Other Functions
+
+We can add a few extra details on top of the rendered map. Like a scale bar, a compass, and a manual label. Remember to keep your pop-up window open.
+
+### Function render_scalebar()
+This function is used to simply add a 3D scale bar to your map.
+
+### Function render_compass()
+This function allows you to add a 3D compass to your map.
+
+### Function render_label()
+This function allows for you to add x and y labels to your map which you can align with your specified altitude in the map’s matrix. 
+---
+### Scale, Compass, Label
+.pull-left[
+
+
+```r
+render_scalebar(limits=c(0, 5, 10, 15), #render a scalebar on top of the rendered map
+                segments = 3, 
+                label_unit = "km",
+                position = "W")
+
+render_compass(position = "E") #render a compass on top of the rendered map
+
+render_label(samo,#render a label on top of the rendered map
+             x = 160,
+             y = 410,
+             z = 7000,
+             zscale = 50, #z scale magnification
+             text = "Point Dume",
+             textcolor = "darkred",
+             linecolor = "darkred",
+             textsize = 2, linewidth = 5)
+Sys.sleep(1.0)
+```
+]
+.pull-right[
+
+```r
+render_snapshot()
+```
+
+![](presentationwithvideo_files/figure-html/unnamed-chunk-19-1.png)&lt;!-- --&gt;
+
+]
+---
+## render_movie() function
+This function creates a short movie with the camera orbiting  the 3D object.
+This function uses the "av" package or the "gifski" package to create the video.
+The default does an orbit but you can create a custom path that oscillates and orbits and zooms.
+
+```r
+#sfv&lt;- raster_to_matrix(here("Data", "sanfernandovalley.tif"))
+
+#sfv %&gt;%
+    #sphere_shade(zscale = 10, texture = "imhof1") %&gt;%
+        #add_water(detect_water(sfv, min_area = 400),color = "lightblue") %&gt;%
+    #plot_3d(sfv, zscale = 50, fov = 70, theta = 270, phi = 30)
+#render_movie(filename = "sfvmovie.gif",
+             #frames = 20,
+             #fps = 4, 
+             #title_text = "San Fernando Valley")
+```
+---
+## This is the 5 second video created in **render_movie()** video
+
+[click here](https://drive.google.com/file/d/1ya6A9cGMa-mx3V8lWsL9GiDGFxvIpvMt/view?usp=sharing)
+
+---
+## Shortcomings
+
+High quality could take hours to render
+
+Does not work with gganimate yet  
+
+Does not work well with Shiny yet  
+---
+
+# Thank you 
+
+# Any Questions
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script src="macros.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"highlightSpans": true,
+"countIncrementalSlides": false,
+"ratio": "15:10"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

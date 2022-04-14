@@ -1,0 +1,451 @@
+---
+title: "Group 1 Project"
+subtitle: "Rayshader Package"
+author: "Diego, Manroop, and Jessica"
+date: "(`r Sys.Date()`)"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      highlightSpans: true
+      countIncrementalSlides: false
+      beforeInit: "macros.js"
+      ratio: '15:10'
+---
+
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+```
+<div style = "position:fixed; visibility: hidden">
+$$\require{color}\definecolor{yellow}{rgb}{1, 0.8, 0.16078431372549}$$
+$$\require{color}\definecolor{orange}{rgb}{0.96078431372549, 0.525490196078431, 0.203921568627451}$$
+$$\require{color}\definecolor{green}{rgb}{0, 0.474509803921569, 0.396078431372549}$$
+</div>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: {
+    Macros: {
+      yellow: ["{\\color{yellow}{#1}}", 1],
+      orange: ["{\\color{orange}{#1}}", 1],
+      green: ["{\\color{green}{#1}}", 1]
+    },
+    loader: {load: ['[tex]/color']},
+    tex: {packages: {'[+]': ['color']}}
+  }
+});
+</script>
+
+<style>
+.yellow {color: #FFCC29;}
+.orange {color: #F58634;}
+.green {color: #007965;}
+</style>
+
+
+```{r flair_color, echo=FALSE}
+library(flair)
+yellow <- "#FFCC29"
+orange <- "#F58634"
+green <- "#007965"
+```
+
+
+---
+
+```{r, echo=FALSE, message=FALSE}
+
+library(magick)
+library(here)
+imagerayshade <- image_read("https://github.com/allisonhorst/stats-illustrations/blob/master/rstats-artwork/rayshader.png?raw=true")
+
+imagerayshade
+```
+
+---
+
+## What is Rayshader?
+.pull-left[
+  
+It is a package that creates 3D maps in R from elevation data. 
+
+The name comes from using ray shades.  
+
+He wanted the 3D images to be reproducible and also work with ggplot so you don't have to learn a new language.
+
+The creator feels like all 3D isn't bad and 3D engages people.
+
+]
+
+.pull-right[
+
+Created by Tyler Morgan-Wall 
+
+
+```{r, echo=FALSE}
+tylerpic<- image_read(here("Data", "tylerpicture.jpg"))
+tylerpic
+```
+]
+---
+## Introduction
+
+Rayshader is a package used for 3D and 2D visualization. It’s functions can be used to create 3D and 2D maps and ggplots!  It does so through a series of overlays that when applied on top of each other form a 2D/3D map or plot. Rayrender (a sub-feature of rayshader) can also be used to rotate the maps and show your creations from all angles as well as render your creation. 
+---
+
+
+## Install Packages
+Install the latest version here:
+```{r}
+# To install the latest version from Github:
+# install.packages("devtools")
+#devtools::install_github("tylermorganwall/rayshader")
+```
+Or the CRAN version:
+```{r}
+#install.packages("rayshader")
+# install.packages("crosstalk")
+# install.packages("manipulateWidget")
+```
+
+You might also have to install Xquart software if you own a mac
+
+---
+## Load Libraries
+```{r, message=FALSE, warning=FALSE}
+library(rayshader)# creates 3D maps using elevation data
+library(here) # for unbreakable file paths
+library(tidyverse) #tidys up data
+library(raster) # handles raster files
+```
+
+
+
+---
+## 3D plots
+
+Rayshader allows transformation of regular ggplot plots to 3D. Let's start by generating a plot form the "quakes" [sample data](https://portal.opentopography.org/datasets).
+
+.pull-left[
+```{r quakes_2d, message=FALSE, warning=FALSE}
+
+data("quakes")
+
+quakes_sample <- quakes[seq(1,1000,by = 100),]
+
+quakes_plot<-ggplot(data = quakes_sample, aes(x = lat, y = long)) + 
+  geom_point(aes(size = mag, colour = mag)) +
+  guides(size = F) + 
+  labs(x = "Latitude", y = "Longitude") + 
+  scale_colour_viridis_b(option = "B") + 
+  scale_size_continuous(range = c(1,10))
+```
+]
+.pull-right[
+```{r}
+quakes_plot
+```
+]
+---
+
+The plot looks good by itself, but we can try to make a 3D version using rayshader's plot_gg() function.
+
+### Function plot_gg()
+
+This function is arguably the most important part of this package. The function works in conjunction with ggplot2 to take an object and through aesthetics/fill color the plot can be made into a 3D visualization. From now on, we will use render_snapshot() to take a screenshot after every step. 
+
+### Function render_snapshot()
+
+This function takes a snapshot of the current render view, and generates a current device plot.
+---
+Let's see the result on our "quakes" plot.
+.pull-left[
+```{r quakes_3d, warning=FALSE, message=FALSE, error=FALSE}
+plot_gg(quakes_plot,
+        width = 4,
+        height = 4,
+        scale = 300,
+        multicore = TRUE)
+
+Sys.sleep(1.0)
+
+```
+]
+.pull-right[
+```{r}
+render_snapshot(clear=TRUE)
+```
+
+]
+
+---
+
+## Where to get Topographic data
+.pull-left[
+[Shuttle Radar Topogragraphy Mission](https://dwtkns.com/srtm30m/)  
+
+This website gives tiles of data
+
+```{r, echo=FALSE}
+ sat<- image_read(here("Data", "srtm.png"))
+sat
+```
+
+]
+
+.pull-right[
+[OpenTopography.org](https://portal.opentopography.org/datasets)  
+
+This website allows click and drag selection or typing in coordinates
+
+```{r, echo=FALSE}
+topo<-image_read(here("Data", "opentopo.png"))
+topo
+```
+
+]
+---
+
+## Load Data
+
+"quakes" [sample data](https://portal.opentopography.org/datasets
+
+---
+## Topographic maps
+
+What rayshader is the most useful for, is creating stunning 3D topographic maps. Today we are going to render a map starting from an altitude raster. We are going to walk you through the process starting from a custom raster from The Santa Monica Mountains, that we previously prepared for the example.
+
+There are many sources were you can download rasters, depending on your needs, for example [this website](https://dwtkns.com/srtm30m/) contains worldwide altitude rasters with 30 meter resolution.
+
+We can import our raster as an object using the function raster().
+
+```{r, warning=FALSE, message=FALSE}
+elevation <- raster::raster(here("Data","section_SMM.tif"))
+```
+---
+
+
+Now that we have made sure our raster is loaded, let's make our 3d map!
+
+First, we will use raster_to_matrix() to convert the raster into a 3d point matrix manageable by rayshader. 
+
+### function raster_to_matrix()
+
+This function turns the raster file into a matrix file that’s easier to work with
+
+The function converts the the x and y data into a matrix and only keeps the elevation values. This creates a great surface plot
+
+```{r, warning=FALSE, message=TRUE}
+samo <- raster_to_matrix(elevation)
+```
+
+---
+Then we can make sure it works by plotting it with plot_map ().
+```{r, warning=FALSE, message=FALSE}
+height_shade(raster_to_matrix(elevation)) %>%
+  plot_map()
+```
+
+---
+Now that we have doublechecked that our raster is ready, let's create an object with the matrix.
+
+Now, we can render the terrain using **sphere_shade()**, and visualize it by piping it into the **plot_3d ()** function. An interactive pop-up window will open, where you can move around your render, and then you can take a snapshot using the **render_snapshot function()**.
+
+
+### Function sphere_shade()
+
+The sphere_shade() function has two main parts to it. This function acts to add texture to a map or hillshade through spherical mapping and color selection. This function also has a total of 7 preset palettes which can be used to add color to different aspects of the map.
+The presets include:
+ “Imhof1”
+ “Imhof2”
+ “Imhof3”
+ Imhof4“
+”desert“
+”Bw“
+”unicorn"
+---
+
+### Function plot_3d()
+This function creates a 3D plot but allows you to choose camera position and background colors/shadows.
+plot_3d() can be used interchangeably with plot_gg on ggplots but is more specifically used for forming 3D aspects on maps in maps specifically alongside making 3D it also provides texture and elevation matrix.
+
+### Function render_snapshot()
+This function displays the current snapshot or saves it in the current location if you give it a file name
+(clear=TRUE) clears the last image 
+
+
+---
+We will use the plot_3d function to render the 3D figure.
+.pull-left[
+```{r, warning=FALSE, message=TRUE}
+samo %>%
+  sphere_shade(texture = "imhof3") %>% #texture makes reference to the color of the surface
+  plot_3d(samo,
+          zscale = 10,
+          fov = 0, #default field of view angle
+          theta = 50, #default rotation of the view
+          zoom = 0.75,
+          phi = 45, #default azimuth angle
+          windowsize = c(800, 600)) #size of the pop-up window in pixels
+
+Sys.sleep(1.0)
+
+```
+]
+.pull-right[
+```{r}
+render_snapshot(clear=TRUE)
+```
+
+]
+---
+
+Now we can try adding water to the sea surface, using the function add_water().
+
+### Functions detect_water() & add_water()
+
+This function uses an algorithm to find wide flat areas to detect water. It can be adjusted to only include flat areas of a minimal area. detect_water() function uses a flood to fill algorithm to detect where bodies of water would be present. The add_water() can then be used in conjunction with detect_water() to fill this area the color of the fill can also be customized. The customization can be done via manually entering a color name. Alternatively the sphere_shade palette can be used to get a more accurate or matching hue. 
+
+---
+detect_water() and add_water()
+.pull-left[
+```{r, warning=FALSE, message=TRUE}
+samo %>%
+  sphere_shade(texture = "imhof3") %>% 
+  add_water(detect_water(samo), color = "lightblue") %>% #you can customize the color
+  plot_3d(samo,
+          zscale = 10,
+          fov = 0, 
+          theta = 50, 
+          zoom = 0.75,
+          phi = 45, 
+          windowsize = c(800, 600)) 
+Sys.sleep(1.0)
+
+```
+]
+.pull-right[
+```{r}
+render_snapshot(clear=TRUE)
+```
+
+]
+---
+Now, we can add extra shadows in order for it to look more realistic. These will take a while to render.
+
+### Function add_shadow() and related
+
+This functions combines the functions height_shade() and lamb_shade() which is then scaled and applied to create shadows on the map.
+
+height_shade() is able to determine a color for each surface point through an elevation to color map ie. it color matches your surface to what seems to be most accurate.
+
+lamb_shade() is used to set up the direction in which light is hitting your map and in doing so it also creates the shadow based on the manner in which light is reflected on the map.
+---
+add_shadow()
+
+.pull-left[
+```{r, warning=FALSE, message=TRUE}
+samo %>%
+  sphere_shade(texture = "imhof3") %>% 
+  add_water(detect_water(samo), color = "lightblue") %>%
+  add_shadow(ray_shade(samo), 0.5) %>% #generate fine-scale shades from sun
+  add_shadow(ambient_shade(samo), 0) %>% #generate shades from atmospheric scattering
+  plot_3d(samo,
+          zscale = 10,
+          fov = 0, 
+          theta = 50, 
+          zoom = 0.75,
+          phi = 45, 
+          windowsize = c(800, 600)) 
+Sys.sleep(1.0)
+
+```
+]
+.pull-right[
+```{r}
+render_snapshot(clear=FALSE)
+```
+
+]
+---
+## Other Functions
+
+We can add a few extra details on top of the rendered map. Like a scale bar, a compass, and a manual label. Remember to keep your pop-up window open.
+
+### Function render_scalebar()
+This function is used to simply add a 3D scale bar to your map.
+
+### Function render_compass()
+This function allows you to add a 3D compass to your map.
+
+### Function render_label()
+This function allows for you to add x and y labels to your map which you can align with your specified altitude in the map’s matrix. 
+---
+### Scale, Compass, Label
+.pull-left[
+
+```{r scalebar and compass, echo=TRUE, message=FALSE, warning=FALSE}
+render_scalebar(limits=c(0, 5, 10, 15), #render a scalebar on top of the rendered map
+                segments = 3, 
+                label_unit = "km",
+                position = "W")
+
+render_compass(position = "E") #render a compass on top of the rendered map
+
+render_label(samo,#render a label on top of the rendered map
+             x = 160,
+             y = 410,
+             z = 7000,
+             zscale = 50, #z scale magnification
+             text = "Point Dume",
+             textcolor = "darkred",
+             linecolor = "darkred",
+             textsize = 2, linewidth = 5)
+Sys.sleep(1.0)
+```
+]
+.pull-right[
+```{r}
+render_snapshot()
+```
+
+]
+---
+## render_movie() function
+This function creates a short movie with the camera orbiting  the 3D object.
+This function uses the "av" package or the "gifski" package to create the video.
+The default does an orbit but you can create a custom path that oscillates and orbits and zooms.
+```{r, warning=FALSE, error=FALSE}
+#sfv<- raster_to_matrix(here("Data", "sanfernandovalley.tif"))
+
+#sfv %>%
+    #sphere_shade(zscale = 10, texture = "imhof1") %>%
+        #add_water(detect_water(sfv, min_area = 400),color = "lightblue") %>%
+    #plot_3d(sfv, zscale = 50, fov = 70, theta = 270, phi = 30)
+#render_movie(filename = "sfvmovie.gif",
+             #frames = 20,
+             #fps = 4, 
+             #title_text = "San Fernando Valley")
+```
+---
+## This is the 5 second video created in **render_movie()** video
+
+[click here](https://drive.google.com/file/d/1ya6A9cGMa-mx3V8lWsL9GiDGFxvIpvMt/view?usp=sharing)
+
+---
+## Shortcomings
+
+High quality could take hours to render
+
+Does not work with gganimate yet  
+
+Does not work well with Shiny yet  
+---
+
+# Thank you 
+
+# Any Questions
+

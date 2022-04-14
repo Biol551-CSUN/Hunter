@@ -27,6 +27,7 @@ library(ggplot2)
 
 
 ## load data
+sf_trees <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-28/sf_trees.csv')
 
 ```{r}
 sf_trees <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-28/sf_trees.csv')
@@ -93,7 +94,7 @@ ggplot()+
                     y = lat,
                     group = group))+
   geom_point(data = sf_common,
-             aes(x = longitude,
+             aes(x = longitude +0.025,
                  y = latitude,
                  color = common))+
   coord_map(ylim = c(37.69,37.825),
@@ -164,26 +165,30 @@ sfmap <- sfminmaxlong %>%
   mutate(latitude = lat)
 
 
-sftrees <- amelm %>% 
+sftrees <- sf_common %>% 
   filter(common != "") %>% 
+  filter(latitude < 45 & latitude>37.6) %>% 
   group_by(common) %>% 
   mutate(latitude, avglat =
            if_else(between(latitude,37.7006,mean(37.70062,37.71781)),37.71781,
 if_else(between(latitude,mean(37.70062,37.71781),mean(37.71781,37.72927)),37.72927,
 if_else(between(latitude,mean(37.71781,37.72927),mean(37.72927,37.73500)),37.73500,
 if_else(between(latitude,mean(37.72927,37.73500),mean(37.73500,37.76365)),37.76365,
-if_else(between(latitude,mean(37.73500,37.76365,mean(37.76365,37.78657)),37.78657,
+if_else(between(latitude,mean(37.73500,37.76365),mean(37.76365,37.78657)),37.78657,
 if_else(between(latitude,mean(37.76365,37.78657),mean(37.78657,37.79230)),37.79230,
 if_else(between(latitude,mean(37.78657,37.79230),mean(37.79230,37.80376)),37.80376,
-if_else(between(latitude,mean(37.79230,37.80376),37.81522)),37.81522,0)))))))))
+if_else(between(latitude,mean(37.79230,37.80376),37.81522),37.81522,0)))))))))
 
-         
+ggplot(sftrees, aes(x=longitude,
+                    y = latitude)) +
+  geom_point()
+  
  
 #c,d),mean(d,e))),"e",
  #  d,e),mean(e,f))),"f",
-   if_else(between(latitude,mean(e,f),mean(f,g))),"g",
-   if_else(between(latitude,mean(f,g),mean(g,h))),"h",
-   if_else(between(latitude,mean(g,h),i)),"i","NA")
+   if_else(between(latitude,mean(e,f),mean(f,g)),"g",
+   if_else(between(latitude,mean(f,g),mean(g,h)),"h",
+   if_else(between(latitude,mean(g,h),i),"i","NA")))
   
 
 

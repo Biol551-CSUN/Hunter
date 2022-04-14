@@ -1,0 +1,58 @@
+---
+title: "w10_howtogethelp"
+author: "Jessica Hunter"
+date: "4/5/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r}
+library(reprex)
+library(datapasta)
+library(styler)
+library(tidyverse)
+ #install.packages("datapasta")
+# install.packages('styler')
+```
+
+```{r}
+
+
+mpg %>%
+  ggplot(aes(x = displ, y = hwy))%>%
+  geom_point(aes(color = class))
+
+
+tibble::tribble(
+    ~lat,    ~long, ~star_no,
+  33.548, -117.805,      10L,
+  35.534, -121.083,       1L,
+  39.503, -123.743,      25L,
+  32.863,  -117.24,      22L,
+   33.46, -117.671,       8L,
+  33.548, -117.805,       3L,
+  33.603, -117.879,      15L,
+   34.39, -119.511,      23L,
+  35.156, -120.674,       4L,
+  35.316, -120.845,       7L,
+  35.534, -121.083,      35L,
+  36.623, -121.919,      21L,
+  38.306, -123.014,      14L,
+   41.78, -124.234,      17L
+  )
+```
+use datapasta to create a copy and paste for others to use some of your data to figure out your code
+
+**datapasta** go to file and copy and go to addin and then hit paste as tibble and then paste code in the **reprex** to copy and paste into stackoverflow
+
+```{r}
+
+
+
+```
+

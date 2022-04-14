@@ -137,7 +137,7 @@ ggplot()+
  
 ```{r}
 
-states %>% 
+calimap<- states %>% 
   filter(region == "california") %>% 
   ggplot()+
   geom_polygon(aes(x = long,
@@ -162,7 +162,7 @@ CApop_county <- popdata %>%
   inner_join(counties) %>% 
   filter(region == "california") 
 
-  ggplot()+
+ caplot <- ggplot()+
   geom_polygon(data = CApop_county,
                aes(x = long,
                    y = lat,
@@ -170,8 +170,21 @@ CApop_county <- popdata %>%
                    group = group))+
   coord_map()+
     scale_fill_gradient(trans = "log10")+ # log 10 transforming the fill gradient
-  theme_void()
-CApop_county
+  theme_void()+
+   ggsave()
+
+ caplot
+
+plot_gg(caplot,width = 3.5, raytrace = FALSE, preview = TRUE)
+
+par(mfrow = c(1, 2))
+plot_gg(caplot, width = 3.5, raytrace = FALSE, preview = TRUE)
+
+plot_gg(ca, width = 3.5, multicore = TRUE, windowsize = c(800, 800), 
+        zoom = 0.85, phi = 35, theta = 30, sunangle = 225, soliddepth = -100)
+Sys.sleep(0.2)
+render_snapshot(clear = TRUE)
+
 ```
  
  
