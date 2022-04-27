@@ -1,0 +1,25 @@
+---
+title: "Untitled"
+author: "Jessica Hunter"
+date: "4/21/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+read.csv() reads everything as a factor, but the issue is a typo or a mistake 
+read_csv reads all as characters, have to tell it to be a factor
+
+```{r}
+library(forcats)
+library(tidyverse)
+
+starwars %>% 
+  filter(!is.na(species)) %>% 
+  mutate(species=fct_limp(species, n=3)) %>% 
+  count(species, sort = TRUE)
+#install.packages("forcats")
+```
+

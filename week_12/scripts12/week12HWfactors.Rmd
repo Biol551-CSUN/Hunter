@@ -1,0 +1,71 @@
+---
+title: "Homework on factors"
+author: "Jessica Hunter"
+date: "4/26/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE)
+```
+
+## Intro
+
+This script will clean the intertidal data and plot the number of barnacles by type on each site.
+
+## Libraries
+These are the libraries needed for the script to work
+
+```{r, results='hide'}
+library(here)
+library(tidyverse)
+library(janitor)
+```
+
+
+## Load data
+
+This is intertidal data we will use
+
+```{r, echo=TRUE, results='hide', comment=FALSE, message=FALSE}
+tidal<- read_csv(here("week_12", "data", "intertidaldata.csv"))
+
+```
+
+
+## Analysis
+
+This script will clean and select the data that I want to use
+```{r, message=FALSE}
+
+tidalclean<- tidal %>% 
+  clean_names() %>% # makes all the column names the same naming structure
+  select(!transect&!quadrat) %>% # removes the transect and quadrat columns
+  group_by(site) %>% # groups by site for next function
+  mutate_if(is.numeric, list(sum)) %>% # sums up the numeric columns
+  unique.array() %>% # removes the duplicates
+  select(site, # selects the columns I want
+         Large = large_barnacles, # edit the names
+         Small = small_barnacles, # edit the names
+         Gooseneck = gooseneck_barnacles) %>% # edit the names
+  mutate(site=factor(site)) %>% # makes this column a factor
+ pivot_longer(cols = 2:4, names_to="barnacles", values_to = "value") %>% # turns the wide data into long data
+  mutate(barnacles=factor(barnacles, levels = c("Gooseneck", "Small", "Large")), # turns this column into factors
+         value = sort(value)) # sorts in descending order
+
+```
+This is the graph showing the barnacles by site
+
+```{r}
+tidalclean %>%
+    ggplot(aes(x = fct_reorder(site,value,.fun = max), y = value))+ # sets the x and y values for the plot
+  geom_col()+ # creates a bar graph
+  facet_wrap(~barnacles)+ # creates multiple graphs side-by-side
+  coord_flip()+ # flips the x and y coordinates
+  labs(title = "Number of Banacles Types Found at each Site", # add title
+       x = "Sites", # label x axis
+       y = "Quantity Counted") # label y axis
+
+```
+
+

@@ -1,0 +1,249 @@
+---
+title: "w12_words"
+author: "Jessica Hunter"
+date: "4/19/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+regex is regular expression
+```{r eval=FALSE, include=FALSE}
+install.packages("tidytext")
+install.packages("wordcloud2")
+install.packages("janeaustenr")
+install.packages("stopwords")
+```
+library()
+
+
+```{r}
+library(here)
+library(tidyverse)
+library(tidytext)
+library(wordcloud2)
+library(janeaustenr)
+```
+
+
+## stringr
+
+paste("first word", "second word", sep = "-") manioulation
+can use column names but then remove ""  
+paste0() means no space between  
+can out in middle end etc as long as in between  
+shapes <- c("Square", "Circle", "Triangle")
+paste("My favorite shape is a", shapes)  
+
+
+```{r}
+shapes <- c("Square", "Circle", "Triangle")
+paste("My favorite shape is a", shapes)
+str_length(shapes) # how many letters are in each word?
+seq_data<-c("ATCCCGTC")
+str_sub(seq_data, start = 2, end = 4) # extract the 2nd to 4th AA
+seq_data<-c("ATCCCGTC")
+str_sub(seq_data, start = 2, end = 4) # extract the 2nd to 4th AA
+str_sub(seq_data, start = 3, end = 3) <- "A" # add an A in the 3rd position
+seq_data
+
+#You can also duplicate patterns in your strings. Here I am duplicating it 2 and 3 times
+
+str_dup(seq_data, times = c(2, 3)) # times is the number of times to duplicate each string
+
+```
+
+
+
+```{r}
+badtreatments<-c("High", " High", "High ", "Low", "Low")
+badtreatments
+str_rim(badtreatments) #string trim
+str_trim(badtreatments, side = "left") # this removes left
+str_pad()
+str_pad(badtreatments, 5, side = "right") # add a white space to the right side after the 5th character
+str_pad(badtreatments, 5, side = "right", pad = "1") # add a 1 to the right side after the 5th character
+#string to upper and loweer
+x<-"I love R!"
+str_to_upper(x)
+str_to_lower(x)
+str_to_title(x) #adds cap to first letter in each word
+data<-c("AAA", "TATA", "CTAG", "GCTT")
+
+# find all the strings with an A
+str_view(data, pattern = "A")
+str_detect(data, pattern = "A")
+
+str_detect(data, pattern = "AT")
+str_locate(data, pattern = "AT")
+
+```
+
+stringr cheat sheet [link](http://edrub.in/CheatSheets/cheatSheetStringr.pdf)  
+
+
+## regex  
+
+  Metacharacters
+  Sequences
+  Quantifiers
+  Character classes
+  POSIX character classes (Portable Operating System Interface)
+
+these are used in r so have to use 2 backslashes to exscape the function  
+. \ | ( ) [ { $ * + ?
+
+### sequences
+
+```{r}
+vals<-c("a.b", "b.c","c.d")
+#string, pattern, replace
+str_replace(vals, "\\.", " ") # \\ escapes the function of the dot
+vals<-c("a.b.c", "b.c.d","c.d.e")
+#string, pattern, replace
+str_replace(vals, "\\.", " ") # only removes first one  
+str_replace_all(vals, "\\.", " ") # to do all of them and not only the first one
+
+
+```
+
+### sequences
+ as the name suggests refers to the sequences of characters which can match. We have shorthand versions (or anchors) for commonly used sequences in R: 
+ 
+```{r}
+val2<-c("test 123", "test 456", "test")
+str_subset(val2, "\\d") #subsets the things that fit the pattern
+
+```
+
+### character class
+A character class or character set is a list of characters enclosed by square brackets [ ]. Character sets are used to match only one of the different characters. For example, the regex character class [aA] matches any lower case letter a or any upper case letter A. 
+ a carrot means anything other than
+ 
+```{r}
+str_count(val2, "[aeiou]")
+
+## [1] 1 1 1
+
+# count any digit
+str_count(val2, "[0-9]")
+```
+ 
+ 
+### quantifiers
+
+**makes sure to use \\**
+
+ˆ
+```{r}
+strings<-c("550-153-7578",
+         "banana",
+         "435.114.7586",
+         "home: 672-442-6739")
+phone <- "([2-9][0-9]{2})[- .]([0-9]{3})[- .]([0-9]{4})"
+test<-str_subset(strings,phone)
+test
+# Which strings contain phone numbers?
+str_detect(strings, phone)
+
+```
+Let's clean it up. Lets replace all the "." with "-" and extract only the numbers (leaving the letters behind). Remove any extra white space. You can use a sequence of pipes.
+
+I wanted to extract the digits but then I need to add the dashes back in
+
+```{r}
+str_replace_all(test,"\\.","-")
+
+test %>%
+  str_replace_all(pattern = "\\.", replacement = "-") %>% # replace periods with -
+  str_replace_all(pattern = "[a-zA-Z]|\\:", replacement = "") %>% # remove all the things we don't want
+  str_trim() # trim the white space
+```
+
+## tidytest
+
+we will analyze the books by jane austin
+```{r}
+head(austen_books())
+```
+ add a line for line and chapter
+```{r}
+original_books <- austen_books() %>% # get all of Jane Austen's books
+  group_by(book) %>% # so i can oull each ch
+  mutate(line = row_number(), # find every line
+         chapter = cumsum(str_detect(text, regex("^chapter [\\divxlc]", # count the chapters (starts with the word chapter followed by a digit or roman numeral)
+                                                 ignore_case = TRUE)))) %>% #ignore lower or uppercase
+  ungroup() # ungroup it so we have a dataframe again
+# don't try to view the entire thing... its >73000 lines...
+head(original_books)
+```
+
+clean this so that there is only one word per row so its tidy. In tidytext each word is refered to as a token. The function to unnest the data so that its only one word per row is unnest_tokens().
+
+```{r}
+tidy_books <- original_books %>%
+  unnest_tokens(output = word, input = text) # add a column named word, with the input as the text column
+head(tidy_books) # there are now >725,000 rows. Don't view the entire thing!
+```
+  Words that are common and don't really have important meaning (e.g. "and","by","therefore"...). These are called stopwords. We can use the function "get_stopwords()" to essentially remove these words from our dataframe. (This function is essentially just a dataframe of unnecessary words)
+```{r}
+#see an example of all the stopwords
+head(get_stopwords())
+cleaned_books <- tidy_books %>%
+  anti_join(get_stopwords()) # dataframe without the stopwords
+
+## Joining, by = "word"
+
+head(cleaned_books)
+
+```
+  Can create a vector that includes the keywords that i'm looking for
+  
+```{r}
+cleaned_books %>%
+  count(word, sort = TRUE)
+```
+  There are many ways that we can now analyze this tidy dataset of text. One example is we could do a sentiment analysis (how many positive and negative words) using get_sentiments(). 
+```{r}
+sent_word_counts <- tidy_books %>%
+  inner_join(get_sentiments()) %>% # only keep pos or negative words
+  count(word, sentiment, sort = TRUE) # count them
+```
+
+Now, think about how we could do this with science? Instead of get_sentiments(), you could use an inner_join with a vector of keywords that you are searching for.   
+
+lets plot the words
+
+
+```{r}
+sent_word_counts %>%
+  filter(n > 150) %>% # take only if there are over 150 instances of it
+  mutate(n = ifelse(sentiment == "negative", -n, n)) %>% # add a column where if the word is negative make the count negative
+  mutate(word = reorder(word, n)) %>% # sort it so it gows from largest to smallest
+  ggplot(aes(word, n, fill = sentiment)) +
+  geom_col() +
+  coord_flip() +
+  labs(y = "Contribution to sentiment")
+```
+
+word cloud
+
+```{r}
+words<-cleaned_books %>%
+  count(word) %>% # count all the words
+  arrange(desc(n))%>% # sort the words
+  slice(1:100) #take the top 100
+wordcloud2(words, shape = 'triangle', size=0.3) # make a wordcloud out of the top 100 words
+```
+
+  ## r package
+  
+  link for [gg in real life](https://jnolis.com/blog/introducing_ggirl/)
+  
+  
+  
+  
+ 
