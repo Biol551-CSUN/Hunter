@@ -1,0 +1,82 @@
+---
+title: "Week 13 homework"
+author: "Jessica Hunter"
+date: "4/26/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE)
+```
+
+## Intro
+
+This homework script will create two loops to analyze more than one file at a time and place results in a new dataframe
+
+## Libraries
+
+These are the libraries needed to run the code
+
+```{r, results='hide'}
+library(tidyverse)
+library(here)
+```
+
+
+## Data
+
+This is my data used by naming the path
+
+```{r, results='hide'}
+HWpath<-here("week_13", "data13", "homework") # creating a path
+
+files <- dir(path = HWpath,pattern = ".csv") # not using full name 
+
+files2 <- dir(path = HWpath,pattern = ".csv", full.names = TRUE) # using full name for map function
+```
+
+
+## Analyze
+
+### Using a for loop to summarize mean and standard deviation for light and temperature of each file
+
+```{r}
+# create an empty data frame to hold new entries
+
+hw<- data.frame(matrix(nrow = length(files), ncol = 5))
+colnames(hw)<-c("file_name", "mean_temp_C", "stddev_temp_C", "mean_light_lux", "stddev_light_lux")
+
+for(i in 1:length(files)){ # use length of files in case number changes in future
+  rawdata<- read_csv(here(HWpath,files[i])) # read in data
+  hw$file_name[i]<-files[i] # paste new entry new dataframe
+  hw$mean_temp_C[i]<- mean(rawdata$Temp.C, na.rm = TRUE) # calculate mean and paste entry
+  hw$stddev_temp_C[i]<- sd(rawdata$Temp.C, na.rm = TRUE) # calculate standard deviation and paste entry
+  hw$mean_light_lux[i]<- mean(rawdata$Intensity.lux, na.rm = TRUE) # calculate mean and paste entry
+  hw$stddev_light_lux[i]<- sd(rawdata$Intensity.lux, na.rm = TRUE) # calculate standard deviation and paste entry
+}
+
+knitr::kable(hw, caption = "Mean and Standard Deviation of Temperature and Light") # view table
+
+```
+
+### Using map to summarize mean and standard deviation for light and temperature of each file
+
+```{r}
+summarymap<- files2 %>% # create new dataframe
+  set_names() %>% # names the vector
+  map_df(read_csv,.id = "filename") %>% #reads in file, requires full name
+  mutate(filename=gsub(".csv","",basename(filename))) %>% # removes full name and path
+  group_by(filename) %>% # groups for next function
+  summarise(mean_temp_C = mean(Temp.C, na.rm = TRUE), # calculate mean
+            stddev_temp_C = sd(Temp.C, na.rm = TRUE), # calculate standard deviation
+            mean_light_lux = mean(Intensity.lux, na.rm = TRUE), #calculate mean
+            stddev_light_lux = sd(Intensity.lux, na.rm = TRUE)) # calculate standard deviation
+
+  knitr::kable(summarymap, caption = "Mean and Standard Deviation of Temperature and Light") # view table
+  
+```
+
+
+
+
+

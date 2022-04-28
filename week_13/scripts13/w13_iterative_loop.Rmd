@@ -1,0 +1,191 @@
+---
+title: "Iterative loops"
+author: "Jessica Hunter"
+date: "4/26/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## library
+
+```{r}
+library(tidyverse)
+library(here)
+```
+
+
+## load data
+
+```{r}
+
+```
+## notes
+
+[purrcheatsheet](https://github.com/rstudio/cheatsheets/blob/master/purrr.pdf)
+[r4ds chapter](https://r4ds.had.co.nz/iteration.html)
+[advanced r](https://adv-r.hadley.nz/functionals.html)
+
+
+all file names have to be the same, one can't have . and one has _
+you can use file choose in shiny app
+
+### for loops
+
+for(index for sequencing){
+command to repeat
+}
+build from inside out
+```{r}
+# simple for loop
+print(paste("This year is", 2000))
+
+years<- c(2015:2021)
+for (i in years){
+  print(paste("This year is", i))
+}
+```
+
+create dataframe
+always use lnegth() and ncol because the numbers might change in the future
+common mistake is to forget to include value on the left side have tell it which row it's in 1st row in 1st year
+
+```{r}
+year_data<- data.frame(matrix(ncol = 2, nrow = length(years)))
+colnames(year_data)<- c("year", "year_name")
+
+year_data
+
+for(i in 1:length(years)){
+  year_data$year_name[i] <-paste("This year is", years[i] )
+  year_data$year[i]<-years[i] # loop over year
+
+  }
+
+```
+
+test it out
+
+```{r}
+testdata<- read_csv(here("week_13", "data13", "011721_CT354_1pcal.csv" ))
+glimpse(testdata)
+# point to the location on the computer of the folder
+CondPath<-here("week_13", "data13", "cond_data")
+# list all the files in that path with a specific pattern
+# In this case we are looking for everything that has a .csv in the filename
+# you can use regex to be more specific if you are looking for certain patterns in filenames
+files <- dir(path = CondPath,pattern = ".csv")
+files
+```
+
+ pre-allocate space
+```{r}
+
+# make an empty dataframe that has one row for each file and 3 columns
+cond_data<-data.frame(matrix(nrow = length(files), ncol = 3))
+# give the dataframe column names
+colnames(cond_data)<-c("filename","mean_temp", "mean_sal")
+cond_data
+```
+Turn into for loop
+add in the raw data over the loop
+add columns
+add in means
+
+
+test first one
+```{r}
+raw_data<-read_csv(paste0(CondPath,"/",files[1])) # test by reading in the first file and see if it works
+glimpse(raw_data)
+class(raw_data)
+
+for (i in 1:length(files)){ # loop over 1:3 the number of files 
+raw_data<-read_csv(paste0(CondPath,"/",files[i]))
+#glimpse(raw_data)
+cond_data$filename[i]<-files[i]
+cond_data$mean_temp[i]<-mean(raw_data$Temperature, na.rm =TRUE)
+cond_data$mean_sal[i]<-mean(raw_data$Salinity, na.rm =TRUE)
+}
+```
+
+### purr
+purr faster
+also there is a for each package that runs loops in paralell
+
+map functions
+
+The pattern of looping over a vector, doing something to each element and saving the results is so common that the purrr package provides a family of functions to do it for you. There is one function for each type of output:
+
+  map() makes a list.
+   map_lgl() makes a logical vector.
+   map_int() makes an integer vector.
+  map_dbl() makes a double vector.
+  map_chr() makes a character vector.
+  map_df() makes a dataframe
+
+Each function takes a vector as input, applies a function to each piece, and then returns a new vector that’s the same length (and has the same names) as the input.
+
+
+3 ways in map function
+do it straight
+do it create own function
+do it with function already in r
+
+tilda in front and put a dot infront of the variable you are changing when doing multiple things with a function
+```{r}
+1:10 %>% 
+  map(rnorm, n=15) %>% # 15 random number do it 10 times
+  map_dbl(mean)
+  
+1:10 %>% 
+  map(function(x) rnorm(15, x)) %>% 
+  map_dbl(mean)
+
+1:10 %>% 
+  map(~ rnorm(15, .x)) %>% 
+  map_dbl(mean)
+
+```
+
+bring in files
+purr turns all of my files into a dataframe
+
+```{r}
+#Reminder: find the files
+
+# point to the location on the computer of the folder
+CondPath<-here("week_13", "data13", "cond_data")
+files <- dir(path = CondPath,pattern = ".csv")
+files
+
+
+
+#Or, we can get the full file names in one less step by doing this...
+
+files <- dir(path = CondPath,pattern = ".csv", full.names = TRUE)
+#save the entire path name
+files
+
+## this brings in the data and puts it on top of each other maps on top of csv
+#Next, read in the files using map instead of a for loop while retaining the filename as a column.
+
+data<-files %>%
+  set_names()%>% # set's the id of each list to the file name
+  map_df(read_csv,.id = "filename") %>%  # map everything to a dataframe and put the id in a column called filename
+  group_by(filename) %>%
+  summarise(mean_temp = mean(Temperature, na.rm = TRUE),
+            mean_sal = mean(Salinity,na.rm = TRUE))
+data
+```
+
+
+## awesome r package
+[aanatogram](https://r-charts.com/miscellaneous/gganatogram/)
+
+
+
+
+
+
