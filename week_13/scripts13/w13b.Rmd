@@ -1,0 +1,185 @@
+---
+title: "models"
+author: "Jessica Hunter"
+date: "4/28/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, error = FALSE)
+```
+
+
+```{r eval=FALSE, include=FALSE}
+#install.packages('modelsummary')
+install.packages('tidymodels')
+install.packages('broom')
+install.packages('flextable')
+#install.packages('peformance')
+library(performance)
+```
+
+
+```{r, results='hide', message=FALSE}
+library(tidyverse)
+library(here)
+library(palmerpenguins)
+library(broom)
+library(performance) 
+library(modelsummary)
+library(tidymodels)
+```
+linear model
+mod<-lm(y~x, data = df)
+
+lm = linear model, y = dependent variable, x = independent variable(s), df = dataframe.
+
+You read this as y is a function of x
+
+Multiple regression
+mod<-lm(y~x1 + x2, data = df)
+
+Interaction term
+mod<-lm(y~x1*x2, data = df) the * will compute x1+x2+x1:x2
+```{r}
+Peng_mod<-lm(bill_length_mm ~ bill_depth_mm*species, data = penguins)
+check_model(Peng_mod) # check assumptions of an lm model
+
+
+```
+
+anova() gives type 3
+Anova with capital you can chooses type a or 2
+
+## broom
+
+tidy gives summary coeeficients
+
+glance give stats interpretation of whole model, calc fitted value at each x
+
+~tilda in front of function in map function allows you to change one variable
+
+
+```{r}
+anova(Peng_mod)
+summary(Peng_mod)
+
+# Tidy coefficients
+coeffs<-tidy(Peng_mod) # just put tidy() around it
+knitr::kable(coeffs)
+
+#glance extracts R-squared, AICs, etc of the model
+
+# tidy r2, etc
+results<-glance(Peng_mod) 
+knitr::kable(results)
+
+# augment add residuals and predicted values to your original data and requires that you put both the model and data
+
+# tidy residuals, etc
+resid_fitted<-augment(Peng_mod)
+knitr::kable(head(resid_fitted))
+```
+
+## Results in modelsummary
+
+{modelsummary} creates tables and plots to summarize statistical models and data in R.
+
+modelsummary includes two families of functions:
+
+Model Summary
+modelsummary: Regression tables with side-by-side models.
+modelsummary_wide: Regression tables for categorical response models or grouped coefficients.
+modelplot: Coefficient plots.
+
+Data Summary
+datasummary: Powerful tool to create (multi-level) cross-tabs and data summaries.
+datasummary_balance: Balance tables with subgroup statistics and difference in means (aka “Table 1”).
+datasummary_correlation: Correlation tables.
+datasummary_skim: Quick overview (“skim”) of a dataset.
+datasummary_df: Turn dataframes into nice tables with titles, notes, etc. 
+Export summary tables to word, markdown, or tex document. You can also modify the tables to make them pub quality.
+
+Let's compare the Peng_mod with one that does not have species as an interaction term.
+
+```{r}
+# New model
+Peng_mod_noX<-lm(bill_length_mm ~ bill_depth_mm, data = penguins)
+#Make a list of models and name them
+models<-list("Model with interaction" = Peng_mod,
+             "Model with no interaction" = Peng_mod_noX)
+#Save the results as a .docx
+modelsummary(models, output = here("week_13","output13","table.docx"))
+```
+
+## 
+
+Canned coefficient modelplots
+compare both models with and without c
+```{r}
+#install.packages("wesanderson")
+library(wesanderson)
+modelplot(models) +
+    labs(x = 'Coefficients', 
+         y = 'Term names') +
+    scale_color_manual(values = wes_palette('Darjeeling1'))
+```
+
+Many models with purrr, dplyr, and broom
+
+Let's say you want to plot and compare lots of different models at the same time and view the results. For example, instead of using species as an interaction term, let's make an individual model for every species.
+
+We can essentially make a set of lists that have each dataset that we want to model and use the map functions to run the same model to every dataset. We will test it step by step
+
+First, let's call the penguin data and create a list for the data by each species. We do this using nest(). We are going to nest the data by species. 
+
+```{r}
+ models<- penguins %>%
+  ungroup()%>% # the penguin data are grouped so we need to ungroup them
+    nest(-species) %>%  # nest all the data by species
+  mutate(fit = map(data, ~lm(bill_length_mm~body_mass_g, data = .)))
+models
+```
+
+
+```{r}
+#View the results. 
+# First, let's mutate the models list so that we have a tidy coefficient dataframe (using tidy()) and a tidy model results dataframe (using glance())
+
+ results<-models %>%
+   mutate(coeffs = map(fit, tidy), # look at the coefficients
+          modelresults = map(fit, glance)) %>% # R2 and others 
+   select(species, coeffs, modelresults) %>% # only keep the results
+   unnest() # put it back in a dataframe and specify which columns to unnest
+
+view(results) # view the results
+```
+
+## Other very common stats packages
+
+stats: General (lm)and generalized (glm) linear models (already loaded with base R)  
+lmer : mixed effects models
+   lmerTest' : getting results from lmer
+  nlme : non-linear mixed effects models  
+  mgcv, gam : generalized additive models
+  brms, rstan, and many more : Bayesian modeling  
+  lavaan, peicewiseSEM : Structural Equation Models
+  rpart, randomForest, xgboost, and more : Machine learning models
+
+
+## tidymodels
+
+
+```{r}
+lm_mod<-linear_reg() %>%
+  set_engine("lm") %>% # linear model
+   fit(bill_length_mm ~ bill_depth_mm*species, data = penguins) %>% # add model fit
+  tidy() %>% 
+    ggplot()+
+    geom_point(aes(x = term, y = estimate))+
+    geom_errorbar(aes(x = term, ymin = estimate-std.error,
+                      ymax = estimate+std.error), width = 0.1 )+
+  coord_flip()
+lm_mod
+```
+

@@ -1,0 +1,103 @@
+---
+title: "wordcloud scripts"
+author: "Jessica Hunter"
+date: "4/30/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 
+
+```{r}
+library(tidyverse)
+library(tidytext)
+library(wordcloud)
+library(reshape2)
+llibrary(wordcloud2)
+```
+
+
+## Load Data
+
+```{r}
+big_dave <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-04-19/big_dave.csv')
+
+times <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-04-19/times.csv')
+
+```
+
+```{r, eval=FALSE}
+timescluewords<- times %>%
+  drop_na(answer) %>% 
+  unnest_tokens(word, clue, drop = FALSE) %>% 
+  filter(str_detect(word,"[:alpha:]")) %>% 
+  anti_join(stop_words) %>% 
+  count(word, sort = TRUE) %>% 
+  slice_head(n=100) %>% 
+  select(timeword=word)
+
+davecluewords <-big_dave %>% 
+  drop_na(answer) %>% 
+  unnest_tokens(word, clue, drop = FALSE) %>% 
+  filter(str_detect(word,"[:alpha:]")) %>% 
+  anti_join(stop_words) %>% 
+  count(word, sort = TRUE) %>% 
+  slice_head(n=100) %>% 
+  select(daveword=word)
+
+# layout(matrix(c(1, 2), nrow=2), heights=c(1, 4))
+# par(mar=rep(0, 4))
+# plot.new()
+# text(x=0.5, y=0.5, cex = 1.5, offset = 0.5,"Title of my first plot")
+# wordcloud2(timescluewords, size= 0.3, shape = "star",color='random-light', backgroundColor="black")
+# 
+# wordcloud2(davecluewords, size= 0.3, shape = "cartioid",color='random-light', backgroundColor="black")
+
+library(tibble)
+matrixtimesdave <- tibble(davecluewords, timescluewords)
+class(matrixtimesdave)
+
+matrixboth<- as.matrix(matrixtimesdave)
+class(matrixboth)
+
+# comparison.cloud(matrixboth)
+# comparison.cloud(matrixboth,max.words=40,random.order=FALSE)
+```
+
+```{r}
+
+# 
+# library(tibble)
+# # install.packages("tm")
+# library(tm)
+# mtimesdave3 <- tibble(davecluewords3, timescluewords3)
+# class(matrixtimesdave3)
+# 
+# matrixboth3<- as.matrix(matrixtimesdave3)
+# class(matrixboth)
+
+
+# 
+# 
+# tdm <- TermDocumentMatrix(timesdocs) %>%
+#   as.matrix()
+# colnames(hello) <- c("timeword", "daveword")
+
+# hello<- full_join(timescluewords3,davecluewords3)
+
+
+# 
+# pivot_wider(davecluewords3, names_from = )
+# comparison.cloud(matrixboth)
+# comparison.cloud(hello,max.words=40,random.order=FALSE)
+# 
+# hello2 %>% 
+#   acast(word ~ values, value.var = "value", fill = 0) %>%
+#   comparison.cloud(colors = c("#F8766D", "#00BFC4"),
+#                    max.words = 300, random.order = FALSE)
+
+```
+

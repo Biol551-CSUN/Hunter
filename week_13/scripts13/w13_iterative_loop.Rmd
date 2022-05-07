@@ -6,12 +6,15 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 ```
+
+## Intro
+
 
 ## library
 
-```{r}
+```{r, results='hide'}
 library(tidyverse)
 library(here)
 ```
@@ -178,6 +181,7 @@ data<-files %>%
   summarise(mean_temp = mean(Temperature, na.rm = TRUE),
             mean_sal = mean(Salinity,na.rm = TRUE))
 data
+#getwd()
 ```
 
 

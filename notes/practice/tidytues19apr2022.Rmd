@@ -1,0 +1,129 @@
+---
+title: "Tidy Tuesday 4.19.22"
+author: "Jessica Hunter"
+date: "4/20/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, error = FALSE)
+```
+
+## Intro
+
+
+## Libraries
+These are the libraries needed for the code to run
+
+```{r}
+library(tidyverse)
+library(here)
+library(widyr)
+library(tidytext)
+library(wordcloud2)
+```
+
+## Load Data
+
+```{r}
+big_dave <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-04-19/big_dave.csv')
+times <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-04-19/times.csv')
+
+raw_df <- read_csv("https://cryptics.georgeho.org/data/clues.csv?_stream=on&source=bigdave44&_size=max")
+
+raw_df %>% 
+  write_csv(here("data","2022/2022-04-19/big_dave.csv"))
+
+times <- read_csv("https://cryptics.georgeho.org/data/clues.csv?_stream=on&source=times_xwd_times&_size=max")
+
+times %>% 
+  write_csv(here("4.19.22","data","2022/2022-04-19/times.csv"))
+
+```
+
+
+```{r}
+timesdupcount<- times %>% 
+  select(answer)
+duplicated()
+sum(duplicated(timesdupcount))
+
+uniqtime<- unique(timesdupcount)
+samp2 <- duplicated(timesdupcount)
+  
+```
+
+
+##
+
+```{r}
+#count = 0
+#if duplicated(timesdupcount['answer']):
+#  add_df <- 
+#if duplicated(times['answer']):
+  #uplicated_df <- times[]
+
+
+samgj<- times %>% 
+  mutate(truefalse=duplicated(times$answer)) %>% 
+  filter(truefalse==TRUE)
+
+```
+
+
+```{r}
+timescluewords<- times %>%
+  drop_na(answer) %>% 
+  unnest_tokens(word, clue, drop = FALSE) %>% 
+  filter(str_detect(word,"[:alpha:]")) %>% 
+  anti_join(stop_words) %>% 
+  add_count(word, sort = TRUE)
+
+top10<- timescluewords %>% 
+  count(word, sort = TRUE) %>% 
+  slice_head(n = 10) %>% 
+  left_join(timescluewords, by = "word")
+
+timesbigrams<- times %>%
+  drop_na(answer) %>% 
+  unnest_ngrams(bigrams, clue, n =2) %>% 
+  str_replace_all("[:digit:]","") %>% 
+  add_count(bigrams, sort=TRUE)
+
+timescorr<- timescluewords %>% 
+  pairwise_cor(word,rowid) %>% 
+  slice_head(n = 10)
+
+puzzledates<- times %>% 
+  drop_na(answer) %>% 
+  count(puzzle_date,sort=TRUE)
+
+puzzledates2<- big_dave %>% 
+  count(puzzle_date,sort=TRUE)
+```
+
+wordcloud
+
+```{r}
+
+
+
+timescluewords2<- times %>%
+  drop_na(answer) %>% 
+  unnest_tokens(word, clue, drop = FALSE) %>% 
+  filter(str_detect(word,"[:alpha:]")) %>% 
+  anti_join(stop_words) %>% 
+  count(word, sort = TRUE) %>% 
+  slice_head(n=100)
+
+top100<- timescluewords %>% 
+  count(word, sort = TRUE) %>% 
+  slice_head(n = 100) # %>% 
+  #select(cluewords = word, n) %>% 
+
+wordcloud2(timescluewords2, size= 0.3, shape = "star",color='random-light', backgroundColor="black")
+
+letterCloud(timescluewords2,word = "T",color='random-light', backgroundColor="black") # make a wordcloud out of the top 100 words
+top100
+```
+
