@@ -1,0 +1,246 @@
+---
+title: "Final Project"
+author: "Jessica Hunter"
+date: "5/2/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, error = FALSE, message = FALSE)
+```
+
+## libraries
+
+```{r, results='hide'}
+library(tidyverse)
+library(here)
+library(janitor)
+library(wordcloud)
+library(reshape2)
+```
+
+
+## Data
+
+```{r, results='hide'}
+mags <- read_csv(here("finalproject", "data", "CDI_Samples_Akkermansia_MAGs.csv")) %>% 
+  clean_names()
+
+mag2 <- mags %>% 
+  filter(ma_gphylogroup != "ND") %>% 
+  mutate(sampleID = str_replace_all(sample_id, "[^[:digit:]]", ""))
+
+seq16s1 <- read_csv(here("finalproject", "data", "CDI_Samples_Akkermansia_16S.csv")) %>% 
+  clean_names()
+
+seq16sclean1 <- read_csv(here("finalproject", "data", "CDI_Samples_Akkermansia_16S.csv")) %>% 
+  clean_names() %>%
+   select(sample_id = taxon,
+         amuc16s = akkermansia_ra_16s,
+         am_i, am_ii, am_iii, am_iv,
+         dna_conc = dna_concentration) %>% 
+  mutate(am_i, am_i = if_else(am_i == "+++", 4,
+                                 if_else(am_i == "++", 3,
+                                 if_else(am_i == "+", 2,
+                                 if_else(am_i == "+/-", 1,
+                                 if_else(am_i == "-", 0, 0)))))) %>% 
+  mutate(am_ii, am_ii = if_else(am_ii == "+++", 4,
+                                 if_else(am_ii == "++", 3,
+                                 if_else(am_ii == "+", 2,
+                                 if_else(am_ii == "+/-", 1,
+                                 if_else(am_ii == "-", 0, 0)))))) %>% 
+  mutate(am_iii, am_iii = if_else(am_iii == "+++", 4,
+                                 if_else(am_iii == "++", 3,
+                                 if_else(am_iii == "+", 2,
+                                 if_else(am_iii == "+/-", 1,
+                                 if_else(am_iii == "-", 0, 0)))))) %>% 
+  mutate(am_iv, am_iv = if_else(am_iv == "+++", 4,
+                                 if_else(am_iv == "++", 3,
+                                 if_else(am_iv == "+", 2,
+                                 if_else(am_iv == "+/-", 1,
+                                 if_else(am_iv == "-", 0, 0)))))) %>% 
+  mutate(ampercent = str_replace_all(amuc16s,"%", ""),
+         dna_conc = as.numeric(dna_conc),
+         ampercent = as.numeric(ampercent))
+
+clean16s2 <-seq16sclean1 %>% 
+  drop_na()
+
+
+
+
+```
+
+```{r}
+
+g1<- clean16s2 %>% 
+  filter(am_i >0,
+         ampercent > 0.1) %>% 
+  mutate(totaldna = dna_conc * ampercent/100) %>% 
+   select(am_i, totaldna, ampercent) 
+
+g2<- clean16s2 %>% 
+  filter(am_ii > 0,
+         ampercent > 0.1) %>% 
+  mutate(totaldna = dna_conc * ampercent/100) %>% 
+   select(am_ii, totaldna, ampercent) 
+
+
+g4 <- clean16s2 %>% 
+  filter(am_iv > 0,
+         ampercent > 0.1) %>% 
+  mutate(totaldna = dna_conc * ampercent/100) %>% 
+   select(am_iv, totaldna, ampercent) 
+
+## amounts of DNA total to be detectable
+ggplot()+
+  geom_jitter(g2, mapping = aes(x=am_ii,y = totaldna), colour = "steelblue", width = 0.25)+
+  geom_jitter(g1, mapping = aes(x=am_i, y = totaldna), colour = "red", width =0.25)+
+   geom_jitter(g4, mapping = aes(x=am_iv,y = totaldna),colour = "purple", width = 0.25)
+ # geom_smooth(g2, mapping = aes(x=am_ii, y = totaldna, colour = "steelblue"))
+
+# percenr of Amuc
+ggplot()+
+  geom_jitter(g2, mapping = aes(x=am_ii,y = ampercent), colour = "steelblue", width = 0.25)+
+  geom_jitter(g1, mapping = aes(x=am_i, y = ampercent), colour = "red", width =0.25)+
+   geom_jitter(g4, mapping = aes(x=am_iv,y = ampercent),colour = "purple", width = 0.25)
+
+ggplot()+
+  geom_boxplot(g2, mapping = aes(group =am_ii,y = totaldna))
+
+```
+
+
+
+
+
+wordcloud with diet
+percent by presence
+
+
+```{r}
+q1income <- read_csv(here("finalproject","data","questg1.csv")) %>% 
+  clean_names() %>% 
+  select(idnumber = order,
+         phylogroup, max_income)
+q2income <- read_csv(here("finalproject","data","questg2.csv")) %>% 
+  clean_names() %>% 
+  select(idnumber = order,
+         phylogroup, max_income)
+q4income <- read_csv(here("finalproject","data","questg4.csv")) %>% 
+  clean_names() %>% 
+  select(idnumber = order,
+         phylogroup, max_income)
+
+incomeamuc <- q1income %>% 
+  full_join(q2income) %>% 
+  full_join(q4income) %>% 
+  drop_na()
+
+
+q0income <- read_csv(here("finalproject","data","questg0.csv")) %>% 
+  clean_names() %>% 
+  select(idnumber = order,
+         phylogroup, max_income) %>% 
+  drop_na()
+
+bothincome<- incomeamuc %>% 
+  full_join(q0income) %>% 
+  mutate(presence = if_else(phylogroup=="Am0", "Not present", "Present"))
+
+ ggplot(bothincome, mapping = aes(x= presence, y = max_income, fill = presence))+
+   geom_violin()
+
+
+
+allquestions <- read_csv((here("finalproject", "data", "allquestions.csv"))) %>% 
+  clean_names()
+
+#ifelse (allquestions$c_section=="Yes", "yes", 0)
+```
+
+practice
+```{r}
+
+q1 <- read_csv(here("finalproject","data","questg1.csv")) %>% 
+  clean_names() %>% 
+  select(idnumber = order,
+         am1=phylogroup)
+q2 <- read_csv(here("finalproject","data","questg2.csv")) %>% 
+  clean_names() %>% 
+  select(idnumber = order,
+         am2 = phylogroup)
+q4 <- read_csv(here("finalproject","data","questg4.csv")) %>% 
+  clean_names() %>% 
+  select(idnumber = order,
+         am4 = phylogroup)
+q0 <- read_csv(here("finalproject","data","questg0.csv")) %>% 
+  clean_names() %>% 
+  select(idnumber = order,
+         am0 =phylogroup)
+
+diet2 <- read_csv((here("finalproject", "data", "dietdata.csv"))) %>%
+  clean_names()%>%
+  mutate(idnumber = as.numeric(str_replace_all(personal_id, "[^[:digit:]]", ""))) %>%
+  select(idnumber)
+
+qall <- full_join(diet2, q0, by = "idnumber") %>% 
+  full_join(q1, by = "idnumber") %>% 
+  full_join(q2) %>% 
+  full_join(q4)
+
+diet <- read_csv((here("finalproject", "data", "dietdata.csv"))) %>% 
+  clean_names()%>% 
+  mutate(idnumber = as.numeric(str_replace_all(personal_id, "[^[:digit:]]", ""))) %>% 
+  left_join(qall) %>% 
+  pivot_longer(cols = am0:am4, names_to = "phylo", values_to = "am_number",
+               values_drop_na = TRUE) %>% 
+  select(idnumber, sex, age, 
+         fruit_total, grains_total, vegetable_total, dairy_total,
+         carbpercent = percent_kcal_from_carbohydrate,
+         fatpercent = percent_kcal_from_fat,
+         protpercent = percent_kcal_from_protein,
+         am_number)
+
+ggplot(diet, aes(x= am_number,
+                 y=carbpercent,
+             color = am_number))+
+  geom_point()
+
+dietlong<- diet %>% 
+  pivot_longer(cols = carbpercent:protpercent, names_to= "type",
+               values_to = "percentvalue")
+  
+ggplot(dietlong, aes(x= am_number,
+                 y=percentvalue,
+             color = type))+
+  geom_point(position = position_jitterdodge())+
+  geom_boxplot()
+
+
+
+```
+
+
+```{r}
+dietwords <- read_csv((here("finalproject", "data", "dietdata.csv"))) %>% 
+  clean_names()%>% 
+  mutate(idnumber = as.numeric(str_replace_all(personal_id, "[^[:digit:]]", ""))) %>% 
+  left_join(qall) %>% 
+  select(!c(kcal,percent_kcal_from_carbohydrate, percent_kcal_from_protein, percent_kcal_from_fat, dairy_total, 1:3)) %>% 
+  pivot_longer(cols = am0:am4, names_to = "phylo", values_to = "am_number",
+               values_drop_na = TRUE) %>% 
+  mutate(presence = if_else(phylo == "am0", "No Amuc", "Amuc Present")) %>% 
+  select(!59:61) %>% 
+  group_by(presence) %>% 
+  summarise_if(is.numeric, mean, na.rm = TRUE) %>% 
+   pivot_longer(cols= !presence, names_to = "type") %>% # making the data back long for my plot
+    filter(value!=0) %>%  # removing the empty values
+  drop_na() %>% 
+  acast(type~presence, value.var = "value", fill = 0) %>% 
+  comparison.cloud(colors = c("darkorange", "blue"), # colors for my word cloud 
+                   max.words = 100, random.order = FALSE, title.size = 2, rot.per = .3)
+
+#dietraw$presence=="Present"
+```
+
