@@ -24,6 +24,39 @@ library(wordcloud)
 library(reshape2)
 library(magick)
 ```
+
+```{r include=FALSE}
+###### reading in files
+
+raw16s <- read_csv(here("finalproject", "data", "CDI_Samples_16S.csv"))  
+rawq1 <- read_csv(here("finalproject","data","questg1.csv")) 
+rawq2 <- read_csv(here("finalproject","data","questg2.csv"))
+rawq4 <- read_csv(here("finalproject","data","questg4.csv"))
+rawq0 <- read_csv(here("finalproject","data","questg0.csv"))
+
+allquest<- rawq1 %>% 
+  full_join(rawq2) %>% 
+  full_join(rawq4) %>% 
+  full_join(rawq0) %>% 
+  clean_names() %>% 
+  select(!22:52) %>% 
+  mutate(presence = if_else(phylogroup=="Am0", "Not present", "Present"))
+
+rawdiet <- read_csv((here("finalproject", "data", "dietdata.csv"))) %>% 
+  clean_names()
+
+###### reading in picture image
+
+amucem<- image_read(here("finalproject", "data", "EMamuc.png")) 
+amucobesity<- image_read(here("finalproject","data", "amucobesity.jpg"))
+mpex <- image_read(here("finalproject", "data", "multiplexexample.png")) 
+control <- image_read(here("finalproject", "data", "control.jpg")) 
+results <- image_read(here("finalproject", "data", "results.jpg")) 
+zoomout <- image_read(here("finalproject", "data", "zoomedout.jpg"))
+zoom <- image_read(here("finalproject", "data", "zoom.jpg")) 
+happy <- image_read(here("finalproject", "data", "happygut.png"))
+```
+
 # Background
 
 -----
@@ -33,7 +66,6 @@ library(magick)
 
 -----
 ```{r echo=FALSE}
-amucem<- image_read(here("finalproject", "data", "EMamuc.png"))
 amucem
 ```
 ---
@@ -47,7 +79,6 @@ amucem
 ----
 
 ```{r echo=FALSE}
-amucobesity<- image_read(here("finalproject","data", "amucobesity.jpg"))
 amucobesity
 ```
 ---
@@ -75,11 +106,11 @@ Samples came from:
 #### "Designing a multiplex PCR assay to detect the different strains of *A. muciniphila*"
 
 ```{r echo=FALSE}
-mpex <- image_read(here("finalproject", "data", "multiplexexample.png"))
 mpex
-
 ```
 
+- 16S sequencing doesn't distinguish strain types because too similar
+- cheaper, faster, than isolation and whole genome sequencing 
 - Designed primers to amplify exclusive sequences of different lengths from each strain
 
 ---
@@ -89,7 +120,6 @@ mpex
 #### Testing with controls
 
 ```{r echo=FALSE}
-control <- image_read(here("finalproject", "data", "control.jpg"))
 control
 ```
 
@@ -98,7 +128,6 @@ control
 #### Some of the actual results
 
 ```{r echo=FALSE}
-results <- image_read(here("finalproject", "data", "results.jpg"))
 results
 ```
 
@@ -106,7 +135,6 @@ results
 
 ##### More actual results
 ```{r echo=FALSE}
-zoomout <- image_read(here("finalproject", "data", "zoomedout.jpg"))
 zoomout
 ```
 
@@ -115,73 +143,54 @@ zoomout
 #### This person has 2 strains
 
 ```{r echo=FALSE}
-zoom <- image_read(here("finalproject", "data", "zoom.jpg"))
-zoom
+zoom 
 ```
 
 ---
  
 ```{r, include=FALSE}
-seq16sclean1 <- read_csv(here("finalproject", "data", "CDI_Samples_Akkermansia_16S.csv")) %>% 
-  clean_names() %>%
-   select(sample_id = taxon,
-         amuc16s = akkermansia_ra_16s,
-         am_i, am_ii, am_iii, am_iv,
-         dna_conc = dna_concentration) %>% 
-  mutate(am_i, am_i = if_else(am_i == "+++", 4,
+###### cleaning data and sorting
+clean16s2 <- raw16s %>% # reading in file
+  clean_names() %>% # converting the column names to easier format
+   select(sample_id = taxon, # renaming columns and selecting column I want
+         amuc16s = akkermansia_ra_16s, # renaming columns
+         am_i, am_ii, am_iv, # selecting column I want
+         dna_conc = dna_concentration) %>% # renaming columns
+  mutate(am_i, am_i = if_else(am_i == "+++", 4, # changing symbols to numbers
                                  if_else(am_i == "++", 3,
                                  if_else(am_i == "+", 2,
                                  if_else(am_i == "+/-", 1,
                                  if_else(am_i == "-", 0, 0)))))) %>% 
-  mutate(am_ii, am_ii = if_else(am_ii == "+++", 4,
+  mutate(am_ii, am_ii = if_else(am_ii == "+++", 4, # changing symbols to numbers
                                  if_else(am_ii == "++", 3,
                                  if_else(am_ii == "+", 2,
                                  if_else(am_ii == "+/-", 1,
                                  if_else(am_ii == "-", 0, 0)))))) %>% 
-  mutate(am_iii, am_iii = if_else(am_iii == "+++", 4,
-                                 if_else(am_iii == "++", 3,
-                                 if_else(am_iii == "+", 2,
-                                 if_else(am_iii == "+/-", 1,
-                                 if_else(am_iii == "-", 0, 0)))))) %>% 
-  mutate(am_iv, am_iv = if_else(am_iv == "+++", 4,
+  mutate(am_iv, am_iv = if_else(am_iv == "+++", 4, # changing symbols to numbers
                                  if_else(am_iv == "++", 3,
                                  if_else(am_iv == "+", 2,
                                  if_else(am_iv == "+/-", 1,
                                  if_else(am_iv == "-", 0, 0)))))) %>% 
-  mutate(ampercent = str_replace_all(amuc16s,"%", ""),
-         dna_conc = as.numeric(dna_conc),
-         ampercent = as.numeric(ampercent))
+  mutate(ampercent = str_replace_all(amuc16s,"%", ""), # removes the % symbol
+         dna_conc = as.numeric(dna_conc), # converts to numeric
+         ampercent = as.numeric(ampercent)) %>%  # converts to numeric
+  drop_na() %>%  # removes na's which removes the non akkermansia
+  mutate(totaldna = dna_conc * ampercent/100) # creating a column with calculated total DNA
 
-clean16s2 <-seq16sclean1 %>% 
-  drop_na()
+########## turning data into long data
 
-
-clean16slong <- clean16s2 %>% 
-  select(!am_iii) %>% 
-  pivot_longer(cols = am_i:am_iv, names_to = "Strain",
-               values_to = "value") %>% 
-  filter(value != 0) %>% 
-  mutate(Strain = if_else(Strain == "am_i", "AmI",
-                          if_else(Strain == "am_ii", "AmII", "AmIII"))) 
-
-
-g1<- clean16s2 %>% 
-  filter(am_i >0,
-         ampercent > 0.1) %>% 
-  mutate(totaldna = dna_conc * ampercent/100) 
-   
-
-g2<- clean16s2 %>% 
-  filter(am_ii > 0,
-         ampercent > 0.1) %>% 
-  mutate(totaldna = dna_conc * ampercent/100) 
-    
-
-
-g4 <- clean16s2 %>% 
-  filter(am_iv > 0,
-         ampercent > 0.1) %>% 
-  mutate(totaldna = dna_conc * ampercent/100) 
+clean16slong <- clean16s2 %>% # creating new long dataset
+  pivot_longer(  # changes from wide to long data
+    cols = am_i:am_iv, # select columns
+    names_to = "Strain", # name of column of combined variables
+    values_to = "value") %>% # new column
+  filter(value != 0) %>% # removes the ones that aren't strains
+  mutate( # change values in column
+    Strain = if_else(Strain == "am_i", # if condition
+    "AmI", # if true
+    if_else(Strain == "am_ii", # next condition if not true
+    "AmII", # if true
+    "AmIV"))) # if false
     
 ```
 
@@ -194,11 +203,13 @@ g4 <- clean16s2 %>%
 
 ```{r echo=FALSE}
 ggplot()+
-  geom_jitter(g2, mapping = aes(x=am_ii,y = totaldna), colour = "steelblue", width = 0.25)+
-  geom_jitter(g1, mapping = aes(x=am_i, y = totaldna), colour = "red", width =0.25)+
-   geom_jitter(g4, mapping = aes(x=am_iv,y = totaldna),colour = "purple", width = 0.25)+
-  labs(x = "PCR detection band strength",
-       y = "DNA in ng")
+  geom_jitter(clean16slong, # creates a jitter plot with this data
+              mapping = aes(x = value, # maps x to plot
+                            y = totaldna, # maps y to plot
+                            color = Strain), # colors based on strain
+              width = 0.25)+ # width of points
+  labs(x = "PCR detection band strength", 
+       y = "DNA in ng") 
 ```
 
 
@@ -214,9 +225,11 @@ As the amount of DNA is increased the band strength is stronger
 ### This is the relative percent of A.muciniphila present for each of the samples out of the total gut community 
 
 ```{r echo=FALSE}
-ggplot(clean16slong, mapping = aes(x = Strain, y = ampercent, color = Strain))+
-  geom_jitter()+
-  labs(y = "Percent relative abundance")
+ggplot(clean16slong, mapping = aes(x = Strain, # map x to plot
+                                   y = ampercent, # map y to plot
+                                   color = Strain))+
+  geom_jitter()+ # creates a jitter plot
+  labs(y = "Percent relative abundance") # labels y axis
 ```
 
 
@@ -228,50 +241,33 @@ ggplot(clean16slong, mapping = aes(x = Strain, y = ampercent, color = Strain))+
 # Nutritional
 
 ```{r, include=FALSE}
+### cleaning data ###
 
-q1 <- read_csv(here("finalproject","data","questg1.csv")) %>% 
-  clean_names() %>% 
-  select(idnumber = order,
-         am1=phylogroup)
-q2 <- read_csv(here("finalproject","data","questg2.csv")) %>% 
-  clean_names() %>% 
-  select(idnumber = order,
-         am2 = phylogroup)
-q4 <- read_csv(here("finalproject","data","questg4.csv")) %>% 
-  clean_names() %>% 
-  select(idnumber = order,
-         am4 = phylogroup)
-q0 <- read_csv(here("finalproject","data","questg0.csv")) %>% 
-  clean_names() %>% 
-  select(idnumber = order,
-         am0 =phylogroup)
-
-diet2 <- read_csv((here("finalproject", "data", "dietdata.csv"))) %>%
-  clean_names()%>%
-  mutate(idnumber = as.numeric(str_replace_all(personal_id, "[^[:digit:]]", ""))) %>%
-  select(idnumber)
-
-qall <- full_join(diet2, q0, by = "idnumber") %>% 
-  full_join(q1, by = "idnumber") %>% 
-  full_join(q2) %>% 
-  full_join(q4)
-
-diet <- read_csv((here("finalproject", "data", "dietdata.csv"))) %>% 
-  clean_names()%>% 
-  mutate(idnumber = as.numeric(str_replace_all(personal_id, "[^[:digit:]]", ""))) %>% 
-  left_join(qall) %>% 
-  pivot_longer(cols = am0:am4, names_to = "phylo", values_to = "am_number",
-               values_drop_na = TRUE) %>% 
-  select(idnumber, sex, age, 
-         fruit_total, grains_total, vegetable_total, dairy_total,
-         carbpercent = percent_kcal_from_carbohydrate,
+newdietdata <- rawdiet %>% # create a new dataset
+  full_join(allquest) %>% # adding the phylogroups
+  select(!68:105) %>%  # remove colums I don't need
+  mutate(idnumber = as.numeric(str_replace_all(personal_id, "[^[:digit:]]", ""))) %>% # remove all of the letters
+  drop_na() %>% # remove the rows with missing data
+  rename(carbpercent = percent_kcal_from_carbohydrate, # rename the columns
          fatpercent = percent_kcal_from_fat,
-         protpercent = percent_kcal_from_protein,
-         am_number)
+         proteinpercent = percent_kcal_from_protein) 
 
-dietlong<- diet %>% 
-  pivot_longer(cols = carbpercent:protpercent, names_to= "type",
-               values_to = "percentvalue")
+###### creating long data from wide data
+
+nutrientlong <- newdietdata %>% # creating a long new dataset
+  select(carbpercent,proteinpercent, fatpercent, phylogroup) %>% # selecting the columns I want
+  pivot_longer( # convert the data from wide to long
+    cols = carbpercent:fatpercent, # selecting the columns to convert
+    names_to= "type", # name of new column
+    values_to = "percentvalue") # name of new column with values
+
+meatlong <- newdietdata %>% # creating a long new dataset
+  pivot_longer( # convert the data from wide to long
+    cols = meat:seafood_low_fa,  # selecting the columns to convert
+    names_to = "MeatType") %>% # name of new column with combined data
+  select(phylogroup, MeatType, value) %>% # selecting the columns I want
+  filter(value != 0) # remove the values with no value
+
 ```
 
 
@@ -280,12 +276,17 @@ dietlong<- diet %>%
 ### Nutritional Breakdown of meals consumed within 24 hours of sample being taken
 
 ```{r echo=FALSE}
-ggplot(dietlong, aes(x= am_number,
-                 y=percentvalue,
-             color = type))+
-  geom_point(position = position_jitterdodge())+
-  labs(x= "Type of Akkermansia",
-       y = "Percent of Nutrients Consumed")
+ggplot(nutrientlong, # data used
+       aes(x= phylogroup, # map x
+           y=percentvalue, # map y
+           color = type))+ # colors determined by nutrient type
+  geom_point( # creates a point plot with data
+    position = position_jitterdodge())+ # spreading out the points the points
+  labs(x = "Type of Akkermansia", 
+       y = "Percent of Nutrients Consumed")+ # y title
+   scale_color_discrete(name = "Nutrient Type",
+                      labels = c("Carbohydrates", "Fat", "Protein"))+
+  scale_x_discrete(labels = c("None", "AmI", "AmII", "AmIV"))
 ```
 
 
@@ -295,66 +296,68 @@ There are slight diet differences among the different strains and those that hav
 
 -------
 
-```{r}
-diet3 <- read_csv((here("finalproject", "data", "dietdata.csv"))) %>% 
-  clean_names()%>% 
-  mutate(idnumber = as.numeric(str_replace_all(personal_id, "[^[:digit:]]", ""))) %>% 
-  left_join(qall) %>% 
-  pivot_longer(cols = am0:am4, names_to = "phylo", values_to = "am_number",
-               values_drop_na = TRUE)%>% 
-  mutate(phylo = if_else(phylo == "am0", "none",
-                          if_else(phylo == "am2", "AmII",
-                                  if_else(phylo == "am4", "AmIV", "AmI")))) %>%
-  pivot_longer(cols = protein_animal:seafood_low_fa, names_to = "MeatType") %>% 
-  select(phylo, MeatType, value) %>% 
-  filter(value != 0)
+```{r echo=FALSE}
 
-ggplot(diet3, aes(x= phylo, y = value, color = MeatType))+
-  geom_point(position = position_jitterdodge())+
-  labs(x= "Akkermansia Type", y = "kcal")
+ggplot(meatlong, # data used
+       aes(x= phylogroup, # mapping x to plot
+           y = value, # mapping y to plot
+           color = MeatType))+ # colored by type of meat
+  geom_point(position = position_jitterdodge()) + # spread the points out
+  labs(title = "Grams of meat consumed by each type",
+       x = "Akkermansia Type", # labels x axis
+       y = "grams",) + # labels y axis
+  facet_wrap(~MeatType) + # facets the plots
+  scale_color_discrete(name = "Meat Type",
+                      labels = c("Red Meat", "Poultry", "Processed Meats", "High Fatty Acid Seafood", "Low Fatty Acid Seafood"))+
+  scale_x_discrete(labels = c("None", "AmI", "AmII", "AmIV"))
 ```
 
 ----
 
-#### This graph shows the income distribution of the households that have Akkermansia and those that dont
-
-```{r, include=FALSE}
-q1income <- read_csv(here("finalproject","data","questg1.csv")) %>% 
-  clean_names() %>% 
-  select(idnumber = order,
-         phylogroup, max_income)
-q2income <- read_csv(here("finalproject","data","questg2.csv")) %>% 
-  clean_names() %>% 
-  select(idnumber = order,
-         phylogroup, max_income)
-q4income <- read_csv(here("finalproject","data","questg4.csv")) %>% 
-  clean_names() %>% 
-  select(idnumber = order,
-         phylogroup, max_income)
-
-incomeamuc <- q1income %>% 
-  full_join(q2income) %>% 
-  full_join(q4income) %>% 
-  drop_na()
+#### These graphs show some of the demographic distributions of the households that have Akkermansia and those that don't
 
 
-q0income <- read_csv(here("finalproject","data","questg0.csv")) %>% 
-  clean_names() %>% 
-  select(idnumber = order,
-         phylogroup, max_income) %>% 
-  drop_na()
 
-bothincome<- incomeamuc %>% 
-  full_join(q0income) %>% 
-  mutate(presence = if_else(phylogroup=="Am0", "Not present", "Present"))
-```
-
-
-```{r}
- ggplot(bothincome, mapping = aes(x= presence, y = max_income, fill = presence))+
+```{r echo=FALSE}
+ 
+ ggplot(allquest, mapping = aes(x= presence, y = wks_preg, fill = presence))+
    geom_violin()+
-  labs(x= "Presence of Akkermansia",
-       y = "Maximun Imcome in USD")
+  labs(x = "Presence of Akkermansia",
+       y = "Number of weeks pregnant",
+       title = "Pregnancy term distribution of test subjects")
+
+ ggplot(allquest, mapping = aes(x= presence, y = birth_wt_g, fill = presence))+
+   geom_violin()+
+  labs(x = "Presence of Akkermansia",
+       y = "Birth weight in grams",
+       title = "Birth weight distribution of test subjects")
+
+ ggplot(allquest, mapping = aes(x= presence, y = weaned_real_months, fill = presence))+
+   geom_violin()+
+  labs(x = "Presence of Akkermansia",
+       y = "Number of months old when weaned",
+       title = "Age distribution of test subjects when weaned")
+ 
+ggplot(allquest, aes(x = age_years, fill = presence, color = presence))+
+  geom_dotplot(alpha = 0.6, binwidth = .42)+
+  labs(x = "years in age",
+       y = "count",
+       title = "Age distribution of test subjects")
+
+ggplot(allquest, aes(x = str_wrap(ethnicity, width = 35), fill = presence))+
+  geom_dotplot(alpha = 0.5,binwidth = .45)+
+  labs(x = "Ethnicity",
+       y = "Count",
+       title = "Ethnicity distribution of test subjects")+
+  coord_flip()+
+  theme(legend.position = c(0.8,0.2))
+
+ggplot(allquest, mapping = aes(x= presence, y = max_income, fill = presence))+
+   geom_violin()+
+  labs(x = "Presence of Akkermansia",
+       y = "Maximun Household Income in USD",
+       title = "Income distribution of test subjects")
+
 ```
 
 --- 
@@ -362,24 +365,27 @@ bothincome<- incomeamuc %>%
 #### This shows the foods and vitamins associated with those that have *Akkermansia* and those that don't
 
 
-```{r echo=FALSE}
-dietwords <- read_csv((here("finalproject", "data", "dietdata.csv"))) %>% 
-  clean_names()%>% 
-  mutate(idnumber = as.numeric(str_replace_all(personal_id, "[^[:digit:]]", ""))) %>% 
-  left_join(qall) %>% 
-  select(!c(kcal,percent_kcal_from_carbohydrate, percent_kcal_from_protein, percent_kcal_from_fat, dairy_total, 1:3)) %>% 
-  pivot_longer(cols = am0:am4, names_to = "phylo", values_to = "am_number",
-               values_drop_na = TRUE) %>% 
-  mutate(presence = if_else(phylo == "am0", "No Amuc", "Amuc Present")) %>% 
-  select(!59:61) %>% 
-  group_by(presence) %>% 
+```{r, echo=FALSE}
+
+dietwords <- newdietdata %>% # creates new dataset by editing
+  mutate(presence = if_else(# creates a new column
+    phylogroup == "Am0", # condition
+    "No Amuc", # True
+    "Amuc Present")) %>% # if false print this
+  select(!c(kcal,carbpercent, proteinpercent, fatpercent,  dairy_total,idnumber, phylogroup, 1:3)) %>% # removing columns I don't want
+  group_by(presence) %>% # group by present of not
   summarise_if(is.numeric, mean, na.rm = TRUE) %>% 
    pivot_longer(cols= !presence, names_to = "type") %>% # making the data back long for my plot
     filter(value!=0) %>%  # removing the empty values
-  drop_na() %>% 
-  acast(type~presence, value.var = "value", fill = 0) %>% 
-  comparison.cloud(colors = c("darkorange", "blue"), # colors for my word cloud 
-                   max.words = 100, random.order = FALSE, title.size = 2, rot.per = .3, scale = c(4, 1))
+  drop_na() %>% # remove rows with missing data
+  acast(type~presence, value.var = "value", fill = 0) %>% # creates dataset
+  comparison.cloud( # compares data by values and plots in wordcloud
+    colors = c("darkorange", "blue"), # colors for my word cloud
+    max.words = 100, # maximum amount
+    random.order = FALSE, # in decreasing order by value
+    title.size = 2, # size of title
+    rot.per = .3, # percent rotated
+    scale = c(4, 1)) # large to small scale
 
 ```
 
@@ -399,7 +405,6 @@ dietwords <- read_csv((here("finalproject", "data", "dietdata.csv"))) %>%
 # Thank you, 
 ## Any Questions?
 ```{r echo=FALSE}
-happy <- image_read(here("finalproject", "data", "happygut.png"))
 happy
 ```
 

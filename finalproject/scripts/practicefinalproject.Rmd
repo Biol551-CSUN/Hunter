@@ -244,3 +244,84 @@ dietwords <- read_csv((here("finalproject", "data", "dietdata.csv"))) %>%
 #dietraw$presence=="Present"
 ```
 
+
+```{r}
+amucem<- image_read(here("finalproject", "data", "EMamuc.png")) 
+amucobesity<- image_read(here("finalproject","data", "amucobesity.jpg"))
+mpex <- image_read(here("finalproject", "data", "multiplexexample.png")) 
+control <- image_read(here("finalproject", "data", "control.jpg")) 
+results <- image_read(here("finalproject", "data", "results.jpg")) 
+zoomout <- image_read(here("finalproject", "data", "zoomedout.jpg"))
+zoom <- image_read(here("finalproject", "data", "zoom.jpg")) 
+happy <- image_read(here("finalproject", "data", "happygut.png"))
+```
+
+```{r}
+
+raw16s <- read_csv(here("finalproject", "data", "CDI_Samples_16S.csv"))  
+rawq1 <- read_csv(here("finalproject","data","questg1.csv")) 
+rawq2 <- read_csv(here("finalproject","data","questg2.csv"))
+rawq4 <- read_csv(here("finalproject","data","questg4.csv"))
+rawq0 <- read_csv(here("finalproject","data","questg0.csv"))
+
+allquest<- rawq1 %>% 
+  full_join(rawq2) %>% 
+  full_join(rawq4) %>% 
+  full_join(rawq0) %>% 
+  clean_names() %>% 
+  select(!22:52) %>% 
+  mutate(presence = if_else(phylogroup=="Am0", "Not present", "Present"))
+
+newdict <- allquest %>% 
+  pivot_longer(cols = 1:40,
+               names_to = "Name")
+colnames(allquest)
+
+newdict<-data.frame(matrix(nrow = length(allquest), ncol = 3))
+# give the dataframe column names
+colnames(newdict)<-c("Name","Type", "Description")
+
+for (i in 1:length(allquest)){ # loop over 1:3 the number of files 
+
+newdict$Name[i]<-colnames(allquest[i])
+newdict$Type[i]<-class(allquest[[i]])
+}
+
+
+# class(allquest$shannon)
+newdict
+
+# datadictionary_questions <- 
+write_csv(newdict, here("finalproject", "data", "datadictionary_questions.csv"))  
+
+rawdiet <- read_csv((here("finalproject", "data", "dietdata.csv"))) %>% 
+  clean_names()
+
+
+newdict2<-data.frame(matrix(nrow = length(rawdiet), ncol = 3))
+# give the dataframe column names
+colnames(newdict2)<-c("Name","Type", "Description")
+
+for (i in 1:length(rawdiet)){ # loop over 1:3 the number of files 
+
+newdict2$Name[i]<-colnames(rawdiet[i])
+newdict2$Type[i]<-class(rawdiet[[i]])
+} 
+
+newdict2
+dddiet <- read_csv(here("finalproject", "data", "DataDictionary_Dietdata.csv")) %>% 
+  pivot_wider()
+  
+```
+
+
+
+
+
+
+
+
+
+
+
+
